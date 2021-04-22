@@ -3,6 +3,105 @@ import Parser from 'rss-parser';
 import getFeeds from 'get-feeds';
 const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
+export const state = () => ({
+    items: [],
+    feeds: [],
+    groupedFeeds: []
+});
+
+
+export const getters = {
+    authUser(state) {
+        return state.user || null;
+    },
+    isAuthenticated(state) {
+        return !!state.user;
+    },
+    isAdmin(state) {
+        return state.user && state.user.role && state.user.role === "admin";
+    },
+};
+
+export const actions = {
+    async getItemsGroupedByFeeds({ commit }) {
+        const groupedFeeds = await getGroupedFeeds()
+        commit("setGroupedFeeds", { groupedFeeds });
+        return groupedFeeds;
+    },
+    async addFeed({ commit }, { url }) {
+
+        let parser = new Parser();
+
+        console.log("Feeds")
+        var requestFeedUrl = url.replace(/\/$/, "");
+
+        parseURL(requestFeedUrl, '', async (error, discoveredUrl) => {
+            if (error) {
+                return console.log(error)
+            }
+
+            const feedResponse = await parser.parseURL(CORS_PROXY + discoveredUrl);
+            const feed = {
+                title: feedResponse.title,
+                link: feedResponse.link,
+                lastBuildDate: feedResponse.lastBuildDate,
+                feedUrl: feedResponse.feedUrl
+            }
+            const items = feedResponse.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
+            console.log(feedResponse);
+            console.log(feed);
+            console.log(items);
+
+            await db.feeds.put(feed)
+            await db.items.bulkPut(items)
+            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+        });
+
+
+
+    },
+
+    async fetchAll({ commit, state }) {
+        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+        commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+        const groupedFeeds = await getGroupedFeeds();
+        commit("setGroupedFeeds", { groupedFeeds });
+        let parser = new Parser();
+        const feedPromises = state.feeds.map(({ feedUrl }) => {
+            return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
+        });
+        try {
+            const resolvedfeeds = await Promise.all(feedPromises);
+            const { items, feeds } = parseFeeds(resolvedfeeds);
+
+            // Save to DB
+
+            await db.feeds.bulkPut(feeds);
+            await db.items.bulkPut(items);
+            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+            return state.feeds;
+        } catch (message) {
+            return console.log(message);
+        }
+    },
+};
+
+export const mutations = {
+    setItems(state, { items }) {
+        state.items = items;
+    },
+    setFeeds(state, { feeds }) {
+        state.feeds = feeds;
+    },
+    setGroupedFeeds(state, { groupedFeeds }) {
+        state.groupedFeeds = groupedFeeds;
+    },
+};
+
+
+
 function parseFeeds(feeds) {
 
     let _items = [];
@@ -96,104 +195,19 @@ function parseURL(url, searchPrefix, callback) {
 
 }
 
-export const state = () => ({
-    items: [],
-    feeds: []
-});
 
+async function getGroupedFeeds() {
 
-export const getters = {
-    authUser(state) {
-        return state.user || null;
-    },
-    isAuthenticated(state) {
-        return !!state.user;
-    },
-    isAdmin(state) {
-        return state.user && state.user.role && state.user.role === "admin";
-    },
-};
+    // Query
+    const feeds = await db.feeds
+        .toArray();
 
-export const actions = {
-    async addFeed({ commit }, { url }) {
-
-
-        //   # =>
-        //   # [ { sitename: 'nikezono.com'
-        //       rel: 'alternate',
-        //       type: 'application/atom+xml',
-        //       title: 'RSS',
-        //       href: '/atom.xml',
-        //       favicon: 'http://nikezono.com/favicon.ico',
-        //       url: 'http://nikezono.com/atom.xml' } ]
-
-
-        let parser = new Parser();
-
-        console.log("Feeds")
-        var requestFeedUrl = url.replace(/\/$/, "");
-
-        parseURL(requestFeedUrl, '', async (error, discoveredUrl) => {
-            if (error) {
-                return console.log(error)
-            }
-
-            const feedResponse = await parser.parseURL(CORS_PROXY + discoveredUrl);
-            const feed = {
-                title: feedResponse.title,
-                link: feedResponse.link,
-                lastBuildDate: feedResponse.lastBuildDate,
-                feedUrl: feedResponse.feedUrl
-            }
-            const items = feedResponse.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
-            console.log(feedResponse);
-            console.log(feed);
-            console.log(items);
-
-            await db.feeds.put(feed)
-            await db.items.bulkPut(items)
-            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-        });
-
-
-
-    },
-
-    async fetchAll({ commit, state }) {
-
-
-
-        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-        commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-
-
-        let parser = new Parser();
-        const feedPromises = state.feeds.map(({ feedUrl }) => {
-            return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
-        });
-        try {
-            const resolvedfeeds = await Promise.all(feedPromises);
-            const { items, feeds } = parseFeeds(resolvedfeeds);
-
-            // Save to DB
-
-            await db.feeds.bulkPut(feeds);
-            await db.items.bulkPut(items);
-            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-            return state.feeds;
-        } catch (message) {
-            return console.log(message);
-        }
-    },
-};
-
-export const mutations = {
-    setItems(state, { items }) {
-        state.items = items;
-    },
-    setFeeds(state, { feeds }) {
-        state.feeds = feeds;
-    },
-};
+    // using parallel queries:
+    await Promise.all(feeds.map(async feed => {
+        feed.items = await db.items.where('feedLink')
+            .equals(feed.link)
+            .reverse().limit(5)
+            .sortBy('isoDate');
+    }));
+    return feeds;
+}

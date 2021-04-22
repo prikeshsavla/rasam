@@ -1,14 +1,12 @@
 <template>
   <div
-    class="card"
+    
     style="
       width: 100%;
-      box-shadow: none !important;
-      outline: 0.5px solid #ddd;
-      border-radius: 0px;
+      
     "
   >
-    <div class="card-content">
+    <div class="card-content p-3">
       <p>
         <small>
           <span class="is-6 is-clipped single-line-only has-text-weight-medium">

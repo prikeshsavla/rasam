@@ -1,0 +1,23 @@
+{
+  "name": "rasam",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/bulma": "^1.3.0",
+    "@nuxtjs/pwa": "^3.3.5",
+    "core-js": "^3.9.1",
+    "dexie": "^3.0.3",
+    "get-feeds": "^1.1.0",
+    "nuxt": "^2.15.3",
+    "rss-finder": "^2.1.5",
+    "rss-parser": "^3.12.0",
+    "timeago.js": "^4.0.2"
+  },
+  "devDependencies": {}
+}

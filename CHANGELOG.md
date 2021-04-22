@@ -1,3 +1,10 @@
+## [0.2.0] - Add Base Application
+
+* Add a Stories like view
+* Group Items by feeds
+* Show grouped feeds as stories   
+
+
 ## [0.1.0] - Add Base Application
 
 * Nuxt pwa app

@@ -1,7 +1,13 @@
 <template>
-  <div class="container p-3">
+  <div class="container">
+    <div class="box mt-5">
+      <feed-input></feed-input>
+    </div>
+
     <div class="columns is-multiline">
-      <card v-for="item in items" :key="item.link" :article="item" />
+      <div class="column is-flex is-4" v-for="item in items" :key="item.link">
+      <card  :article="item" />
+      </div>
     </div>
 
     <nav
@@ -19,7 +25,7 @@
 import { mapState } from "vuex";
 
 export default {
-  async beforeCreate() {
+  async mounted() {
     await this.$store.dispatch("feeds/fetchAll");
   },
   computed: {

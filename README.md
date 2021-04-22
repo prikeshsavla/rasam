@@ -28,3 +28,4 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [ ] Open Article on tap
 - [ ] Favorite a article
 - [ ] Dispay Feed like stories
+- [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart

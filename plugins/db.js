@@ -2,8 +2,8 @@ import Dexie from 'dexie';
 
 const db = new Dexie('rasam');
 db.version(1).stores({
-    posts: `++id, title, content, isoDate, author, link, feed_id`,
-    feeds: `++id, title, link`,
+    items: `link, title, content, isoDate, author, feedLink`,
+    feeds: `link, title, lastBuildDate, feedUrl`,
 });
 
 export default db;

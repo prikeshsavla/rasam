@@ -1,23 +1,25 @@
 <template>
-  <div class="container">
-    <div class="box mt-5">
+  <div class="container p-3">
+    <div class="box ">
       <feed-input></feed-input>
     </div>
 
+    <nuxt-link to="stories" class="button is-fullwidth is-primary is-outlined">Stories</nuxt-link>
+
     <div class="columns is-multiline">
-      <div class="column is-flex is-4" v-for="item in items" :key="item.link">
+      <div class="column is-flex is-4 p-0" v-for="item in items" :key="item.link">
       <card  :article="item" />
       </div>
     </div>
 
-    <nav
+    <!-- <nav
       class="pagination is-centered"
       role="navigation"
       aria-label="pagination"
     >
       <a class="pagination-previous">Previous</a>
       <a class="pagination-next">Next page</a>
-    </nav>
+    </nav> -->
   </div>
 </template>
 

@@ -11,9 +11,12 @@
   "dependencies": {
     "@nuxtjs/bulma": "^1.3.0",
     "@nuxtjs/pwa": "^3.3.5",
+    "animejs": "^3.2.1",
     "core-js": "^3.9.1",
     "dexie": "^3.0.3",
     "get-feeds": "^1.1.0",
+    "hammerjs": "^2.0.8",
+    "lodash-es": "^4.17.21",
     "nuxt": "^2.15.3",
     "rss-finder": "^2.1.5",
     "rss-parser": "^3.12.0",

@@ -1,7 +1,7 @@
 <template>
   <section class="section px-3 pt-3">
     <button
-      @click="$router.back()"
+      @click="back"
       class="button is-fullwidth is-primary is-outlined mt-3"
     >
       Back
@@ -36,6 +36,7 @@ export default {
   methods: {
     back() {
       this.$router.back();
+      window.history.back();
     },
   },
   computed: {

@@ -32,7 +32,7 @@ export const actions = {
 
         let parser = new Parser();
 
-        console.log("Feeds")
+        
         var requestFeedUrl = url.replace(/\/$/, "");
 
         parseURL(requestFeedUrl, '', async (error, discoveredUrl) => {
@@ -48,9 +48,7 @@ export const actions = {
                 feedUrl: feedResponse.feedUrl
             }
             const items = feedResponse.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
-            console.log(feedResponse);
-            console.log(feed);
-            console.log(items);
+         
 
             await db.feeds.put(feed)
             await db.items.bulkPut(items)
@@ -164,15 +162,15 @@ function parseURL(url, searchPrefix, callback) {
 
     async function checkAll() {
         if (await (isRss(feed))) {
-            console.log("Check base")
+            
             return feed;
         } else {
-            console.log("Check Dom")
+            
             res = await checkTheDom(feed);
             if (res) {
                 return res;
             } else {
-                console.log("Check Suspects")
+                
                 res = await checkSuspects(feed);
 
                 if (res) {

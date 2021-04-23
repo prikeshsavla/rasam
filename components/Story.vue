@@ -7,6 +7,7 @@
     </div>
     <div class="slide">
       <story-card :article="slides[currentSlideIndex]" />
+      
     </div>
   </div>
 </template>
@@ -39,7 +40,7 @@ export default {
   },
   watch: {
     action(newValue) {
-      console.log(newValue, this.index);
+      
       switch (newValue) {
         case "activate":
           this.activate();

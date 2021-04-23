@@ -2,7 +2,7 @@
   <div class="container p-3">
     <div class="box">
       <feed-input></feed-input>
-      <nuxt-link to="stories" class="button is-fullwidth is-primary is-outlined"
+      <nuxt-link to="stories" class="button is-fullwidth is-primary is-outlined" prefetch
         >Stories</nuxt-link
       >
     </div>

@@ -2,8 +2,9 @@
   <div id="app" :style="getMargin()">
     <story
       :slides="story.items"
+      :story="story"
       :index="index"
-      v-for="(story, index) in groupedFeeds"
+      v-for="(story, index) in stories"
       :key="index"
       ref="stories"
     />
@@ -17,38 +18,28 @@ import { mapState } from "vuex";
 
 export default {
   
-  data() {
-    return {
-      currentStoryIndex: 0,
-      stories: [
-        ["#D53738", "#638867"],
-        ["#DAF7A6", "#FFC300", "#FF5733"],
-        ["#00BCD4"],
-      ],
-    };
-  },
   async mounted() {
-    await this.$store.dispatch("feeds/fetchAll");
-    // await this.$store.dispatch("feeds/getItemsGroupedByFeeds");
+    // await this.$store.dispatch("feeds/fetchAll");
+    await this.$store.dispatch("stories/fetchAll");
 
-    EventBus.$on("NEXT_STORY", () => {
-      if (this.currentStoryIndex < this.stories.length - 1) {
-        this.$refs.stories[this.currentStoryIndex].deactivate();
-        this.currentStoryIndex++;
-        this.$refs.stories[this.currentStoryIndex].activate();
-      }
-    });
+    // EventBus.$on("NEXT_STORY", () => {
+    //   if (this.currentStoryIndex < this.stories.length - 1) {
+    //     this.$refs.stories[this.currentStoryIndex].deactivate();
+    //     this.currentStoryIndex++;
+    //     this.$refs.stories[this.currentStoryIndex].activate();
+    //   }
+    // });
 
-    EventBus.$on("PREVIOUS_STORY", () => {
-      if (this.currentStoryIndex > 0) {
-        this.$refs.stories[this.currentStoryIndex].deactivate();
-        this.currentStoryIndex--;
-        this.$refs.stories[this.currentStoryIndex].activate();
-      } else {
-        console.log("PREVIOUS_STORY");
-        this.$refs.stories[this.currentStoryIndex].resetSlide();
-      }
-    });
+    // EventBus.$on("PREVIOUS_STORY", () => {
+    //   if (this.currentStoryIndex > 0) {
+    //     this.$refs.stories[this.currentStoryIndex].deactivate();
+    //     this.currentStoryIndex--;
+    //     this.$refs.stories[this.currentStoryIndex].activate();
+    //   } else {
+    //     console.log("PREVIOUS_STORY");
+    //     this.$refs.stories[this.currentStoryIndex].resetSlide();
+    //   }
+    // });
 
     // Disable mouse wheel
     this.$el.addEventListener("wheel", (event) => {
@@ -112,13 +103,14 @@ export default {
   },
   computed: {
     ...mapState({
-      groupedFeeds: ({ feeds }) => feeds.groupedFeeds,
+      stories: ({ stories }) => stories.items,
+      currentStoryIndex: ({ stories }) => stories.currentStoryIndex,
     }),
   },
 };
 </script>
 
-<style>
+<style scoped>
 html,
 body {
   width: 100vw;

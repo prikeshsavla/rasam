@@ -65,26 +65,26 @@ export const actions = {
     async fetchAll({ commit, state }) {
         commit("setFeeds", { feeds: (await db.feeds.toArray()) });
         commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-        const groupedFeeds = await getGroupedFeeds();
-        commit("setGroupedFeeds", { groupedFeeds });
-        let parser = new Parser();
-        const feedPromises = state.feeds.map(({ feedUrl }) => {
-            return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
-        });
-        try {
-            const resolvedfeeds = await Promise.all(feedPromises);
-            const { items, feeds } = parseFeeds(resolvedfeeds);
+        // const groupedFeeds = await getGroupedFeeds();
+        // commit("setGroupedFeeds", { groupedFeeds });
+        // let parser = new Parser();
+        // const feedPromises = state.feeds.map(({ feedUrl }) => {
+        //     return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
+        // });
+        // try {
+        //     const resolvedfeeds = await Promise.all(feedPromises);
+        //     const { items, feeds } = parseFeeds(resolvedfeeds);
 
-            // Save to DB
+        //     // Save to DB
 
-            await db.feeds.bulkPut(feeds);
-            await db.items.bulkPut(items);
-            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-            return state.feeds;
-        } catch (message) {
-            return console.log(message);
-        }
+        //     await db.feeds.bulkPut(feeds);
+        //     await db.items.bulkPut(items);
+        //     commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+        //     commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+        //     return state.feeds;
+        // } catch (message) {
+        //     return console.log(message);
+        // }
     },
 };
 

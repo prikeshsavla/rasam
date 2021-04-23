@@ -1,3 +1,10 @@
+## [0.4.0] - Add Base Application
+
+* Offline article page
+* view offline article
+* add view button stories to open
+
+
 ## [0.2.0] - Add Base Application
 
 * Add a Stories like view

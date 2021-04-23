@@ -1,5 +1,5 @@
 <template>
-  <div class="story"  >
+  <div class="story">
     <div class="timeline">
       <div class="slice" v-for="(slide, i) in slides" :key="i">
         <div class="progress">&nbsp;</div>
@@ -17,10 +17,11 @@ import anime from "animejs/lib/anime.es.js";
 import Hammer from "hammerjs";
 import { EventBus } from "../helpers/EventBus.js";
 
-const SLIDE_DURATION = 6000;
+const SLIDE_DURATION = 2000;
 
 export default {
   props: {
+    story: Object,
     slides: Array,
     index: Number,
   },
@@ -36,6 +37,27 @@ export default {
       isActive: false,
       timeline: timeline,
     };
+  },
+  watch: {
+    action(newValue) {
+      
+      switch (newValue) {
+        case "activate":
+          this.activate();
+          // this.timeline.pause();
+          break;
+        case "deactivate":
+          this.deactivate();
+          break;
+        default:
+          break;
+      }
+    },
+  },
+  computed: {
+    action() {
+      return this.story.action;
+    },
   },
   methods: {
     activate: function () {
@@ -68,10 +90,12 @@ export default {
       }
     },
     nextStory: function () {
-      EventBus.$emit("NEXT_STORY");
+      // EventBus.$emit("NEXT_STORY");
+      this.$store.dispatch("stories/nextStory");
     },
     previousStory: function () {
-      EventBus.$emit("PREVIOUS_STORY");
+      // EventBus.$emit("PREVIOUS_STORY");
+      this.$store.dispatch("stories/previousStory");
     },
   },
   mounted() {
@@ -108,14 +132,17 @@ export default {
 
     this.hammer.on("press", () => {
       this.timeline.pause();
+       console.log("press: press");
     });
 
     this.hammer.on("pressup tap", () => {
       this.timeline.play();
+        console.log("press: pressup tap");
     });
 
     // Tap on the side to navigate between slides
     this.hammer.on("tap", (event) => {
+      console.log("tap: tap");
       if (event.center.x > window.innerWidth / 3) {
         this.nextSlide();
       } else {
@@ -125,6 +152,7 @@ export default {
 
     // Handle swipe
     this.hammer.on("pan", (event) => {
+        console.log("pan: pan");
       if (event.isFinal) {
         if (event.deltaX < 0) {
           this.nextStory();
@@ -135,27 +163,26 @@ export default {
     });
 
     this.hammer.on("swipeup", (event) => {
-      if (event.isFinal) {
-       
-          console.log("SWIPE: swipeup");
-        
-      }
+      
+        console.log("SWIPE: swipeup");
     });
 
     this.hammer.on("swipedown", (event) => {
-      if (event.isFinal) {
-       
-          console.log("SWIPE: swipedown");
-       
-      }
+
+        console.log("SWIPE: swipedown");
+
     });
 
-    this.hammer.on("right", (event) => {
-      if (event.isFinal) {
-        
-          console.log("SWIPE: right");
-        
-      }
+    this.hammer.on("swiperight", (event) => {
+
+        console.log("SWIPE: right");
+
+    });
+
+       this.hammer.on("swipeleft", (event) => {
+
+        console.log("SWIPE: right");
+
     });
 
     if (this.index == 0) {
@@ -168,7 +195,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .story {
-  float: left;
+  /* float: left; */
   position: relative;
   height: 100vh;
   width: 100vw;
@@ -205,5 +232,4 @@ export default {
   align-items: flex-end;
   justify-content: center;
 }
-
 </style>

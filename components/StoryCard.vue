@@ -1,11 +1,5 @@
 <template>
-  <div
-    
-    style="
-      width: 100%;
-      
-    "
-  >
+  <div style="width: 100%">
     <div class="card-content p-3">
       <p>
         <small>
@@ -13,11 +7,9 @@
             {{ article.feedTitle }}
           </span>
         </small>
-       
       </p>
       <a
         :href="article.link"
-        
         class="has-text-primary is-clipped double-line-only"
         ><strong>{{ article.title }}</strong></a
       >
@@ -25,15 +17,23 @@
       <div class="is-clipped line-clamp">
         {{ article.contentSnippet }}
       </div>
-       <small>
-         <a :href="this.article.feedLink"  class="has-text-primary">{{ feedLink }}</a>
-        </small><br>
+      <small>
+        <a :href="this.article.feedLink" class="has-text-primary">{{
+          feedLink
+        }}</a> </small
+      ><br />
       <small>
         <span class="is-6 has-text-weight-medium has-text-grey">{{
           author
         }}</span>
         ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
       </small>
+      <nuxt-link
+        :to="`article/${encrypt(article.link)}`"
+        class="button is-fullwidth is-primary is-outlined mt-3"
+      >
+        View
+      </nuxt-link>
     </div>
     <!-- <div class="card-image has-text-centered pt-5" v-if="article.enclosure" >
         <a :href="article.link"  class="has-text-primary"
@@ -50,19 +50,20 @@
 
 <script>
 import TimeAgo from "./TimeAgo.vue";
+import { encrypt } from "@/plugins/crypt";
 export default {
   components: { TimeAgo },
   props: ["article"],
   methods: {
-    formatDate(dateString) {
-      const dateObj = new Date(dateString);
-      return dateObj.toLocaleDateString();
-    },
+    encrypt,
   },
   computed: {
     feedLink() {
-      const url = new URL(this.article.feedLink)
-      return url.href.replace('www.', '').replace(/http(s):\/\//, '').replace(/\/$/, '');
+      const url = new URL(this.article.feedLink);
+      return url.href
+        .replace("www.", "")
+        .replace(/http(s):\/\//, "")
+        .replace(/\/$/, "");
     },
     author() {
       return (

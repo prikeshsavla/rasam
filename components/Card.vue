@@ -17,12 +17,12 @@
         </small>
        
       </p>
-      <a
-        :href="article.link"
-        
+      <nuxt-link
+        :to="`article/${encrypt(article.link)}`"
         class="has-text-primary is-clipped double-line-only"
-        ><strong>{{ article.title }}</strong></a
       >
+        <strong>{{ article.title }}</strong>
+      </nuxt-link>
 
       <div class="is-clipped line-clamp">
         {{ article.contentSnippet }}
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import {encrypt} from "@/plugins/crypt"
 import TimeAgo from "./TimeAgo.vue";
 export default {
   components: { TimeAgo },
@@ -60,11 +61,15 @@ export default {
       const dateObj = new Date(dateString);
       return dateObj.toLocaleDateString();
     },
+    encrypt
   },
   computed: {
     feedLink() {
-      const url = new URL(this.article.feedLink)
-      return url.href.replace('www.', '').replace(/http(s):\/\//, '').replace(/\/$/, '');
+      const url = new URL(this.article.feedLink);
+      return url.href
+        .replace("www.", "")
+        .replace(/http(s):\/\//, "")
+        .replace(/\/$/, "");
     },
     author() {
       return (

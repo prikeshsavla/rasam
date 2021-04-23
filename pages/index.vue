@@ -1,14 +1,19 @@
 <template>
   <div class="container p-3">
-    <div class="box ">
+    <div class="box">
       <feed-input></feed-input>
+      <nuxt-link to="stories" class="button is-fullwidth is-primary is-outlined" prefetch
+        >Stories</nuxt-link
+      >
     </div>
 
-    <nuxt-link to="stories" class="button is-fullwidth is-primary is-outlined">Stories</nuxt-link>
-
     <div class="columns is-multiline">
-      <div class="column is-flex is-4 p-0" v-for="item in items" :key="item.link">
-      <card  :article="item" />
+      <div
+        class="column is-flex is-4 p-0"
+        v-for="item in items"
+        :key="item.link"
+      >
+        <card :article="item" />
       </div>
     </div>
 

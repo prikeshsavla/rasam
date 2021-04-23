@@ -24,11 +24,10 @@ export default {
   },
   methods: {
     addFeed() {
-      console.log(`Adding ${this.feedURL} ...`);
 
       this.$store.dispatch("feeds/addFeed", { url: this.feedURL });
 
-      console.log("Added.");
+
     },
   },
 };

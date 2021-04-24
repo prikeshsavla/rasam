@@ -1,3 +1,10 @@
+## [0.5.0] - Refactor Code
+
+* Add Support to favorite an article
+* Add Story Gestures
+* Add loading icon in Add Feed
+
+
 ## [0.4.5] - Refactor Code
 
 * Fix Story article interval

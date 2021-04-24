@@ -27,17 +27,16 @@
 </template>
 
 <script>
-import { decrypt } from "@/plugins/crypt";
+
+import { mapState } from "vuex";
 
 export default {
   async asyncData({ store, params: { id } }) {
-    const item = await store.dispatch("item/getItem", decrypt(id));
-    return { article: item };
+    await store.dispatch("feeds/items/getItemByID",id);
   },
   methods: {
     back() {
       this.$router.back();
-      // window.history.back();
     },
   },
   computed: {
@@ -58,6 +57,9 @@ export default {
         this.article.author || this.article.creator || this.article.feedTitle
       );
     },
+    ...mapState({
+      article: ({feeds:{items}}) => items.item
+    })
   },
 };
 </script>

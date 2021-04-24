@@ -6,4 +6,5 @@ db.version(1).stores({
     feeds: `link, title, lastBuildDate, feedUrl`,
 });
 
+
 export default db;

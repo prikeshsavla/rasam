@@ -1,7 +1,9 @@
 import db from "@/plugins/db";
-
-const SLIDE_DURATION = 2000;
-
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const STORY_INTERVAL = DAY * 7
 
 export const state = () => ({
     items: [],
@@ -15,7 +17,7 @@ export const getters = {
 
 export const actions = {
     async fetchAll({ commit }) {
-        const groupedFeeds = await getGroupedFeeds()
+        const groupedFeeds = await getStories()
 
         const stories = groupedFeeds.map((item) => {
             return Object.assign(item, { action: '' })
@@ -39,7 +41,8 @@ export const actions = {
             await commit('setCurrentStoryIndex', state.currentStoryIndex - 1)
             await commit('activateStory')
         } else {
-            console.log("PREVIOUS_STORY");
+            console.log("Go to Home");
+            this.$router.push('/')
             await commit('activateStory')
         }
     }
@@ -63,7 +66,7 @@ export const mutations = {
 
 
 
-async function getGroupedFeeds() {
+async function getStories(afterDate = (new Date() - STORY_INTERVAL)) {
 
     // Query
     const feeds = await db.feeds
@@ -73,8 +76,11 @@ async function getGroupedFeeds() {
     await Promise.all(feeds.map(async feed => {
         feed.items = await db.items.where('feedLink')
             .equals(feed.link)
-            .reverse().limit(5)
+            .and(function (item) { return new Date(item.isoDate) > afterDate })
+            .reverse()
             .sortBy('isoDate');
     }));
-    return feeds;
+    console.log(feeds)
+
+    return feeds.filter((feed) => feed.items.length > 0);
 }

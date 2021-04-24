@@ -33,20 +33,19 @@ export const actions = {
         let parser = new Parser();
         var requestFeedUrl = url.replace(/\/$/, "");
 
-        findFeedFromURL(requestFeedUrl, '', async (error, discoveredUrl) => {
-            if (error) {
-                alert(error);
-                return console.log(error)
-            }
-            const feed = await parser.parseURL(CORS_PROXY + discoveredUrl);
-            const items = feed.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
-            const feedWithoutItems = Object.assign({}, feed, { items: [] })
-            await db.feeds.put(feedWithoutItems)
-            await db.items.bulkPut(items)
-            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            dispatch('items/fetchAll')
-            alert(`${items.length} articles of ${feed.title} added`);
-        });
+        const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '');
+        if (error) {
+            alert(error);
+            return console.log(error)
+        }
+        const feed = await parser.parseURL(CORS_PROXY + discoveredUrl);
+        const items = feed.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
+        const feedWithoutItems = Object.assign({}, feed, { items: [] })
+        await db.feeds.put(feedWithoutItems)
+        await db.items.bulkPut(items)
+        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+        dispatch('items/fetchAll')
+        alert(`${items.length} articles of ${feed.title} added`);
     },
 
     async fetchAll({ commit, dispatch, state }) {
@@ -103,9 +102,9 @@ function parseFeeds(feeds) {
     return { feeds: _feeds, items: _items }
 }
 
-function findFeedFromURL(url, searchPrefix, callback) {
+async function findFeedFromURL(url, searchPrefix, callback) {
     if (!isValidHttpUrl(url)) {
-        return callback('Invalid URL:' + url + '. Please enter a valid URL with http or https.')
+        return { error: 'Invalid URL:' + url + '. Please enter a valid URL with http or https.' }
     }
 
     const p = new URL(url),
@@ -123,10 +122,10 @@ function findFeedFromURL(url, searchPrefix, callback) {
     var feed = url.replace(/\/$/, "");
     var res = '';
 
-    if (!p.protocol) return callback(null, searchPrefix + url.split(' '));
+    if (!p.protocol) return { error: null, discovered: searchPrefix + url.split(' ') };
 
     if (p.host.endsWith('youtube.com') && p.path.startsWith('/channel') && p.path.split('/').length === 3)
-        return callback(null, videoPrefix + p.path.split('/')[2]);
+        return { error: null, discovered: videoPrefix + p.path.split('/')[2] };
 
     async function isRss(u) {
         const response = await fetch(CORS_PROXY + u).catch(e => { return false; });
@@ -158,17 +157,13 @@ function findFeedFromURL(url, searchPrefix, callback) {
 
     async function checkAll() {
         if (await (isRss(feed))) {
-
             return feed;
         } else {
-
             res = await checkTheDom(feed);
             if (res) {
                 return res;
             } else {
-
                 res = await checkSuspects(feed);
-
                 if (res) {
                     return res;
                 } else {
@@ -178,13 +173,10 @@ function findFeedFromURL(url, searchPrefix, callback) {
         }
     }
 
-    (async function () {
-        res = await (checkAll());
-        if (res)
-            return callback(null, res);
-        else
-            return callback('No feed found');
-    })();
 
-
+    res = await checkAll();
+    if (res)
+        return { error: null, discoveredUrl: res };
+    else
+        return { error: 'No feed found' };
 }

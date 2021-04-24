@@ -178,12 +178,13 @@ export default {
     this.hammer.on("swiperight", (event) => {
       console.log("SWIPE: swiperight");
 
-      this.previousSlide();
+      this.previousStory();
     });
 
     this.hammer.on("swipeleft", (event) => {
       console.log("SWIPE: swipeleft");
-      this.nextSlide();
+      
+      this.nextStory();
     });
 
     if (this.index == 0) {

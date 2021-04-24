@@ -1,3 +1,10 @@
+## [0.4.5] - Refactor Code
+
+* Fix Story article interval
+* fix article page formatting
+* add validations and alerts for feed addition
+
+
 ## [0.4.0] - Add Base Application
 
 * Offline article page

@@ -13,7 +13,7 @@
       <h1 class="title mb-3 mt-5 is-4">
         <a :href="article.link"> {{ article.title }}</a>
       </h1>
-      <small>{{ article.content }}</small> <br>
+      <small>{{ article.contentSnippet }}</small> <br>
       <small>
         {{ author }} ~<time-ago
           class="has-text-grey"
@@ -21,7 +21,7 @@
         ></time-ago
       ></small>
       <hr class="my-3" />
-      <div class="content" v-html="article['content:encoded']"></div>
+      <div class="content" v-html="content"></div>
     </div>
   </section>
 </template>
@@ -47,6 +47,11 @@ export default {
         .replace("www.", "")
         .replace(/http(s):\/\//, "")
         .replace(/\/$/, "");
+    },
+    content(){
+      return (
+        this.article['content:encoded'] || this.article['content']
+      );
     },
     author() {
       return (

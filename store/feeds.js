@@ -102,9 +102,10 @@ function parseFeeds(feeds) {
 
     let _items = [];
     let _feeds = [];
-    feeds.forEach(({ title, link, lastBuildDate, feedUrl, items }) => {
-        _feeds.push({ title, link, lastBuildDate, feedUrl })
-        _items.push(...items.map((item) => Object.assign(item, { feedTitle: title, feedLink: link })))
+    feeds.forEach((feed) => {
+        const feedWithoutItems = Object.assign({}, feed, { items: [] })
+        _feeds.push(feedWithoutItems)
+        _items.push(...feed.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link })))
     });
     return { feeds: _feeds, items: _items }
 }

@@ -14,6 +14,7 @@
 <script>
 import anime from "animejs/lib/anime.es.js";
 import Hammer from "hammerjs";
+import { encrypt } from "~/plugins/crypt";
 
 const SLIDE_DURATION = 6000;
 
@@ -120,8 +121,7 @@ export default {
 
     this.hammer = new Hammer.Manager(this.$el, {
       recognizers: [
-        [Hammer.Pan, { direction: Hammer.DIRECTION_HORIZONTAL }],
-        [Hammer.Swipe, { direction: Hammer.DIRECTION_VERTICAL }],
+        [Hammer.Swipe, { direction: Hammer.DIRECTION_ALL }],
         [Hammer.Tap],
         [Hammer.Press, { time: 1, threshold: 1000000 }],
       ],
@@ -140,39 +140,50 @@ export default {
     // Tap on the side to navigate between slides
     this.hammer.on("tap", (event) => {
       console.log("tap: tap");
-      if (event.center.x > window.innerWidth / 3) {
+      console.log("center.x", event.center.x);
+      console.log("window.outerWidth", window.outerWidth);
+      console.log("next?", event.center.x > window.outerWidth / 3);
+      if (event.center.x > window.outerWidth / 3) {
         this.nextSlide();
       } else {
         this.previousSlide();
       }
     });
 
-    // Handle swipe
-    this.hammer.on("pan", (event) => {
-      console.log("pan: pan");
-      if (event.isFinal) {
-        if (event.deltaX < 0) {
-          this.nextStory();
-        } else if (event.deltaX > 0) {
-          this.previousStory();
-        }
-      }
-    });
+    // // Handle swipe
+    // this.hammer.on("pan", (event) => {
+    //   console.log("pan: pan");
+    //   if (event.isFinal) {
+    //     if (event.deltaX < 0) {
+    //       this.nextStory();
+    //     } else if (event.deltaX > 0) {
+    //       this.previousStory();
+    //     }
+    //   }
+    // });
 
     this.hammer.on("swipeup", (event) => {
       console.log("SWIPE: swipeup");
+
+      this.$router.push(
+        `/article/${encrypt(this.slides[this.currentSlideIndex].link)}`
+      );
     });
 
     this.hammer.on("swipedown", (event) => {
       console.log("SWIPE: swipedown");
+      this.$router.push("/");
     });
 
     this.hammer.on("swiperight", (event) => {
-      console.log("SWIPE: right");
+      console.log("SWIPE: swiperight");
+
+      this.previousSlide();
     });
 
     this.hammer.on("swipeleft", (event) => {
-      console.log("SWIPE: right");
+      console.log("SWIPE: swipeleft");
+      this.nextSlide();
     });
 
     if (this.index == 0) {

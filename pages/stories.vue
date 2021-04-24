@@ -16,7 +16,6 @@ import debounce from "lodash/debounce";
 import { mapState } from "vuex";
 
 export default {
-  
   async mounted() {
     // await this.$store.dispatch("feeds/fetchAll");
     await this.$store.dispatch("stories/fetchAll");
@@ -104,7 +103,7 @@ export default {
   },
   computed: {
     ...mapState({
-      stories: ({ stories }) => stories.items,
+      stories: ({ stories }) => stories.list,
       currentStoryIndex: ({ stories }) => stories.currentStoryIndex,
     }),
   },

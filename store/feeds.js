@@ -1,12 +1,13 @@
 import db from "@/plugins/db";
 import Parser from 'rss-parser';
 import getFeeds from 'get-feeds';
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+const CORS_PROXY = window.location.hostname === "localhost"
+    ? "https://api.allorigins.win/raw?url="
+    : "/cors-proxy/";
 
 export const state = () => ({
     items: [],
-    feeds: [],
-    groupedFeeds: []
+    feeds: []
 });
 
 
@@ -31,12 +32,11 @@ export const actions = {
     async addFeed({ commit }, { url }) {
 
         let parser = new Parser();
-
-        
         var requestFeedUrl = url.replace(/\/$/, "");
 
-        parseURL(requestFeedUrl, '', async (error, discoveredUrl) => {
+        findFeedFromURL(requestFeedUrl, '', async (error, discoveredUrl) => {
             if (error) {
+                alert(error);
                 return console.log(error)
             }
 
@@ -47,42 +47,37 @@ export const actions = {
                 lastBuildDate: feedResponse.lastBuildDate,
                 feedUrl: feedResponse.feedUrl
             }
-            const items = feedResponse.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
-         
+            const items = feedResponse.items.map((item) => Object.assign(item, { itemDate: new Date(item.isoDate), feedTitle: feed.title, feedLink: feed.link }))
 
             await db.feeds.put(feed)
             await db.items.bulkPut(items)
             commit("setFeeds", { feeds: (await db.feeds.toArray()) });
             commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+            alert(`${items.length} articles of ${feed.title} added`);
         });
-
-
-
     },
 
     async fetchAll({ commit, state }) {
         commit("setFeeds", { feeds: (await db.feeds.toArray()) });
         commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-        // const groupedFeeds = await getGroupedFeeds();
-        // commit("setGroupedFeeds", { groupedFeeds });
-        // let parser = new Parser();
-        // const feedPromises = state.feeds.map(({ feedUrl }) => {
-        //     return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
-        // });
-        // try {
-        //     const resolvedfeeds = await Promise.all(feedPromises);
-        //     const { items, feeds } = parseFeeds(resolvedfeeds);
+        let parser = new Parser();
+        const feedPromises = state.feeds.map(({ feedUrl }) => {
+            return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
+        });
+        try {
+            const resolvedfeeds = await Promise.all(feedPromises);
+            const { items, feeds } = parseFeeds(resolvedfeeds);
 
-        //     // Save to DB
+            // Save to DB
 
-        //     await db.feeds.bulkPut(feeds);
-        //     await db.items.bulkPut(items);
-        //     commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-        //     commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-        //     return state.feeds;
-        // } catch (message) {
-        //     return console.log(message);
-        // }
+            await db.feeds.bulkPut(feeds);
+            await db.items.bulkPut(items);
+            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+            return state.feeds;
+        } catch (message) {
+            return console.log(message);
+        }
     },
 };
 
@@ -97,7 +92,10 @@ export const mutations = {
         state.groupedFeeds = groupedFeeds;
     },
 };
-
+function validURL(myURL) {
+    var pattern = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+    return pattern.test(myURL);
+}
 
 
 function parseFeeds(feeds) {
@@ -111,7 +109,11 @@ function parseFeeds(feeds) {
     return { feeds: _feeds, items: _items }
 }
 
-function parseURL(url, searchPrefix, callback) {
+function findFeedFromURL(url, searchPrefix, callback) {
+    if (!validURL(url)) {
+        return callback('Invalid URL')
+    }
+
     const p = new URL(url),
         protocol = p.protocol != null ? p.protocol : 'http:',
         domain = protocol + "//" + p.hostname,
@@ -162,15 +164,15 @@ function parseURL(url, searchPrefix, callback) {
 
     async function checkAll() {
         if (await (isRss(feed))) {
-            
+
             return feed;
         } else {
-            
+
             res = await checkTheDom(feed);
             if (res) {
                 return res;
             } else {
-                
+
                 res = await checkSuspects(feed);
 
                 if (res) {
@@ -191,21 +193,4 @@ function parseURL(url, searchPrefix, callback) {
     })();
 
 
-}
-
-
-async function getGroupedFeeds() {
-
-    // Query
-    const feeds = await db.feeds
-        .toArray();
-
-    // using parallel queries:
-    await Promise.all(feeds.map(async feed => {
-        feed.items = await db.items.where('feedLink')
-            .equals(feed.link)
-            .reverse().limit(5)
-            .sortBy('isoDate');
-    }));
-    return feeds;
 }

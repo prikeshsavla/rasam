@@ -1,11 +1,11 @@
 <template>
-  <div class="field has-addons">
+  <div class="field has-addons ">
     <div class="control">
       <input
         class="input"
         v-model="feedURL"
         type="url"
-        placeholder="Find a repository"
+        placeholder="Add a Blog/Feed"
       />
     </div>
     <div class="control">

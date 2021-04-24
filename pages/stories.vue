@@ -13,7 +13,6 @@
 
 <script>
 import debounce from "lodash/debounce";
-import { EventBus } from "@/helpers/EventBus.js";
 import { mapState } from "vuex";
 
 export default {
@@ -49,7 +48,8 @@ export default {
     // Debounced previous and next
     const debouncedNext = debounce(
       () => {
-        EventBus.$emit("NEXT_STORY");
+        this.$store.dispatch("stories/nextStory");
+        // EventBus.$emit("NEXT_STORY");
       },
       200,
       { leading: true, trailing: false }
@@ -57,7 +57,8 @@ export default {
 
     const debouncedPrevious = debounce(
       () => {
-        EventBus.$emit("PREVIOUS_STORY");
+        this.$store.dispatch("stories/previousStory");
+        // EventBus.$emit("PREVIOUS_STORY");
       },
       200,
       { leading: true, trailing: false }

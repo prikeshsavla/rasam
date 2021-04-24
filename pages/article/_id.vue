@@ -1,18 +1,19 @@
 <template>
   <section class="section px-3 pt-3">
-    <button
-      @click="back"
-      class="button is-fullwidth is-primary is-outlined mt-3"
-    >
-      Back
-    </button>
     <div class="container">
+      <button
+        @click="back"
+        class="button is-fullwidth is-primary is-outlined mt-3"
+      >
+        Back
+      </button>
       <small>
         {{ article.feedTitle }}
       </small>
       <h1 class="title mb-3 mt-5 is-4">
         <a :href="article.link"> {{ article.title }}</a>
       </h1>
+      <small>{{ article.content }}</small> <br>
       <small>
         {{ author }} ~<time-ago
           class="has-text-grey"
@@ -36,7 +37,7 @@ export default {
   methods: {
     back() {
       this.$router.back();
-      window.history.back();
+      // window.history.back();
     },
   },
   computed: {
@@ -61,6 +62,9 @@ export default {
   overflow-wrap: anywhere;
   font-size: 0.9em;
 }
+.content > * {
+  max-width: 100%;
+}
 a {
   color: hsl(171, 100%, 41%);
 }
@@ -72,6 +76,6 @@ figure {
 }
 img {
   max-width: 100% !important;
-  display: block;
+  display: block !important;
 }
 </style>

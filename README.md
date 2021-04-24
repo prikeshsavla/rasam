@@ -22,10 +22,9 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ### Roadmap
 
-- [ ] Display Feed like Twitter cards
-- [ ] Floating Action button to add Feed
-- [ ] Sort by Time Asc & Desc, Random
-- [ ] Open Article on tap
+- [x] Display Feed like Twitter cards
+- [x] Field to add new Feed
+- [x] Open Article on tap
 - [ ] Favorite a article
 - [ ] Dispay Feed like stories
-- [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart
+- [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart (Optional)

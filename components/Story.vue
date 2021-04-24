@@ -7,7 +7,6 @@
     </div>
     <div class="slide">
       <story-card :article="slides[currentSlideIndex]" />
-      
     </div>
   </div>
 </template>
@@ -15,9 +14,8 @@
 <script>
 import anime from "animejs/lib/anime.es.js";
 import Hammer from "hammerjs";
-import { EventBus } from "../helpers/EventBus.js";
 
-const SLIDE_DURATION = 2000;
+const SLIDE_DURATION = 6000;
 
 export default {
   props: {
@@ -40,7 +38,6 @@ export default {
   },
   watch: {
     action(newValue) {
-      
       switch (newValue) {
         case "activate":
           this.activate();
@@ -132,12 +129,12 @@ export default {
 
     this.hammer.on("press", () => {
       this.timeline.pause();
-       console.log("press: press");
+      console.log("press: press");
     });
 
     this.hammer.on("pressup tap", () => {
       this.timeline.play();
-        console.log("press: pressup tap");
+      console.log("press: pressup tap");
     });
 
     // Tap on the side to navigate between slides
@@ -152,7 +149,7 @@ export default {
 
     // Handle swipe
     this.hammer.on("pan", (event) => {
-        console.log("pan: pan");
+      console.log("pan: pan");
       if (event.isFinal) {
         if (event.deltaX < 0) {
           this.nextStory();
@@ -163,26 +160,19 @@ export default {
     });
 
     this.hammer.on("swipeup", (event) => {
-      
-        console.log("SWIPE: swipeup");
+      console.log("SWIPE: swipeup");
     });
 
     this.hammer.on("swipedown", (event) => {
-
-        console.log("SWIPE: swipedown");
-
+      console.log("SWIPE: swipedown");
     });
 
     this.hammer.on("swiperight", (event) => {
-
-        console.log("SWIPE: right");
-
+      console.log("SWIPE: right");
     });
 
-       this.hammer.on("swipeleft", (event) => {
-
-        console.log("SWIPE: right");
-
+    this.hammer.on("swipeleft", (event) => {
+      console.log("SWIPE: right");
     });
 
     if (this.index == 0) {

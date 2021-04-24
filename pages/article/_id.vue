@@ -1,18 +1,19 @@
 <template>
   <section class="section px-3 pt-3">
-    <button
-      @click="back"
-      class="button is-fullwidth is-primary is-outlined mt-3"
-    >
-      Back
-    </button>
     <div class="container">
+      <button
+        @click="back"
+        class="button is-fullwidth is-primary is-outlined mt-3"
+      >
+        Back
+      </button>
       <small>
         {{ article.feedTitle }}
       </small>
       <h1 class="title mb-3 mt-5 is-4">
         <a :href="article.link"> {{ article.title }}</a>
       </h1>
+      <small>{{ article.contentSnippet }}</small> <br>
       <small>
         {{ author }} ~<time-ago
           class="has-text-grey"
@@ -20,7 +21,7 @@
         ></time-ago
       ></small>
       <hr class="my-3" />
-      <div class="content" v-html="article['content:encoded']"></div>
+      <div class="content" v-html="content"></div>
     </div>
   </section>
 </template>
@@ -36,7 +37,7 @@ export default {
   methods: {
     back() {
       this.$router.back();
-      window.history.back();
+      // window.history.back();
     },
   },
   computed: {
@@ -46,6 +47,11 @@ export default {
         .replace("www.", "")
         .replace(/http(s):\/\//, "")
         .replace(/\/$/, "");
+    },
+    content(){
+      return (
+        this.article['content:encoded'] || this.article['content']
+      );
     },
     author() {
       return (
@@ -61,6 +67,9 @@ export default {
   overflow-wrap: anywhere;
   font-size: 0.9em;
 }
+.content > * {
+  max-width: 100%;
+}
 a {
   color: hsl(171, 100%, 41%);
 }
@@ -72,6 +81,6 @@ figure {
 }
 img {
   max-width: 100% !important;
-  display: block;
+  display: block !important;
 }
 </style>

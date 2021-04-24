@@ -8,10 +8,11 @@
           </span>
         </small>
       </p>
-      <a
-        :href="article.link"
+      <nuxt-link
+        :to="`article/${encrypt(article.link)}`"
         class="has-text-primary is-clipped double-line-only"
-        ><strong>{{ article.title }}</strong></a
+      >
+        <strong>{{ article.title }}</strong></nuxt-link
       >
 
       <div class="is-clipped line-clamp">

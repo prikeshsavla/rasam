@@ -92,10 +92,17 @@ export const mutations = {
         state.groupedFeeds = groupedFeeds;
     },
 };
-function validURL(myURL) {
-    var pattern = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
-    return pattern.test(myURL);
-}
+function isValidHttpUrl(string) {
+    let url;
+    
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;  
+    }
+  
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
 
 
 function parseFeeds(feeds) {
@@ -111,8 +118,8 @@ function parseFeeds(feeds) {
 }
 
 function findFeedFromURL(url, searchPrefix, callback) {
-    if (!validURL(url)) {
-        return callback('Invalid URL')
+    if (!isValidHttpUrl(url)) {
+        return callback('Invalid URL:'+ url + '. Please enter a valid URL with http or https.')
     }
 
     const p = new URL(url),

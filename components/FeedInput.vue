@@ -1,5 +1,5 @@
 <template>
-  <div class="field has-addons ">
+  <div class="field has-addons">
     <div class="control">
       <input
         class="input"
@@ -9,7 +9,7 @@
       />
     </div>
     <div class="control">
-      <a class="button is-info" @click="addFeed"> Add </a>
+      <a class="button is-info" @click="addFeed"> {{ buttonText }} </a>
     </div>
   </div>
   <!-- https://www.smashingmagazine.com/feed/ -->
@@ -20,14 +20,12 @@ export default {
   data() {
     return {
       feedURL: "",
+      buttonText: "Add",
     };
   },
   methods: {
-    addFeed() {
-
-      this.$store.dispatch("feeds/addFeed", { url: this.feedURL });
-
-
+    async addFeed() {
+      await this.$store.dispatch("feeds/addFeed", { url: this.feedURL });
     },
   },
 };

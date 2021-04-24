@@ -6,7 +6,7 @@ const DAY = 24 * HOUR;
 const STORY_INTERVAL = DAY * 7
 
 export const state = () => ({
-    items: [],
+    list: [],
     currentStoryIndex: 0
 });
 
@@ -17,7 +17,8 @@ export const getters = {
 
 export const actions = {
     async fetchAll({ commit }) {
-        const groupedFeeds = await getStories()
+
+        const groupedFeeds = await getGroupedItems()
 
         const stories = groupedFeeds.map((item) => {
             return Object.assign(item, { action: '' })
@@ -28,7 +29,7 @@ export const actions = {
     },
 
     async nextStory({ state, commit }) {
-        if (state.currentStoryIndex < state.items.length - 1) {
+        if (state.currentStoryIndex < state.list.length - 1) {
             await commit('deactivateStory')
             await commit('setCurrentStoryIndex', state.currentStoryIndex + 1)
             await commit('activateStory')
@@ -42,31 +43,32 @@ export const actions = {
             await commit('activateStory')
         } else {
             console.log("Go to Home");
-            this.$router.push('/')
             await commit('activateStory')
+            this.$router.push('/')
+           
         }
     }
 };
 
 export const mutations = {
     setStories(state, { stories }) {
-        state.items = stories;
+        state.list = stories;
     },
     setCurrentStoryIndex(state, currentStoryIndex) {
         state.currentStoryIndex = currentStoryIndex;
     },
     activateStory(state) {
-        state.items[state.currentStoryIndex].action = 'activate';
+        state.list[state.currentStoryIndex].action = 'activate';
     },
     deactivateStory(state) {
-        state.items[state.currentStoryIndex].action = 'deactivate';
+        state.list[state.currentStoryIndex].action = 'deactivate';
     },
 
 };
 
 
 
-async function getStories(afterDate = (new Date() - STORY_INTERVAL)) {
+async function getGroupedItems(afterDate = (new Date() - STORY_INTERVAL)) {
 
     // Query
     const feeds = await db.feeds
@@ -80,7 +82,6 @@ async function getStories(afterDate = (new Date() - STORY_INTERVAL)) {
             .reverse()
             .sortBy('isoDate');
     }));
-    console.log(feeds)
 
     return feeds.filter((feed) => feed.items.length > 0);
 }

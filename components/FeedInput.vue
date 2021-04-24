@@ -9,7 +9,13 @@
       />
     </div>
     <div class="control">
-      <a class="button is-info" @click="addFeed"> {{ buttonText }} </a>
+      <a
+        class="button is-info"
+        :class="{ 'is-loading': isLoading }"
+        @click="addFeed"
+      >
+        {{ buttonText }}
+      </a>
     </div>
   </div>
   <!-- https://www.smashingmagazine.com/feed/ -->
@@ -20,12 +26,15 @@ export default {
   data() {
     return {
       feedURL: "",
+      isLoading: false,
       buttonText: "Add",
     };
   },
   methods: {
     async addFeed() {
+      this.isLoading = true;
       await this.$store.dispatch("feeds/addFeed", { url: this.feedURL });
+      this.isLoading = false;
     },
   },
 };

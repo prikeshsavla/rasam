@@ -15,7 +15,6 @@
             {{ article.feedTitle }}
           </span>
         </small>
-       
       </p>
       <nuxt-link
         :to="`article/${encrypt(article.link)}`"
@@ -27,15 +26,21 @@
       <div class="is-clipped line-clamp">
         {{ article.contentSnippet }}
       </div>
-       <small>
-         <a :href="this.article.feedLink"  class="has-text-primary">{{ feedLink }}</a>
-        </small><br>
+      <small>
+        <a :href="this.article.feedLink" class="has-text-primary">{{
+          feedLink
+        }}</a> </small
+      ><br />
       <small>
         <span class="is-6 has-text-weight-medium has-text-grey">{{
           author
         }}</span>
         ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
       </small>
+      <like-button
+        :link="article.link"
+        :likedAt="article.likedAt"
+      ></like-button>
     </div>
     <!-- <div class="card-image has-text-centered pt-5" v-if="article.enclosure" >
         <a :href="article.link"  class="has-text-primary"
@@ -51,7 +56,7 @@
 </template>
 
 <script>
-import {encrypt} from "@/plugins/crypt"
+import { encrypt } from "@/plugins/crypt";
 import TimeAgo from "./TimeAgo.vue";
 export default {
   components: { TimeAgo },
@@ -61,7 +66,7 @@ export default {
       const dateObj = new Date(dateString);
       return dateObj.toLocaleDateString();
     },
-    encrypt
+    encrypt,
   },
   computed: {
     feedLink() {

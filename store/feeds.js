@@ -6,8 +6,7 @@ const CORS_PROXY = window.location.hostname === "localhost"
     : "/cors-proxy/";
 
 export const state = () => ({
-    items: [],
-    feeds: []
+    list: []
 });
 
 
@@ -29,40 +28,32 @@ export const actions = {
         commit("setGroupedFeeds", { groupedFeeds });
         return groupedFeeds;
     },
-    async addFeed({ commit }, { url }) {
+    async addFeed({ commit, dispatch }, { url }) {
 
         let parser = new Parser();
         var requestFeedUrl = url.replace(/\/$/, "");
 
-        findFeedFromURL(requestFeedUrl, '', async (error, discoveredUrl) => {
-            if (error) {
-                alert(error);
-                return console.log(error)
-            }
-
-            const feedResponse = await parser.parseURL(CORS_PROXY + discoveredUrl);
-            const feed = {
-                title: feedResponse.title,
-                link: feedResponse.link,
-                lastBuildDate: feedResponse.lastBuildDate,
-                feedUrl: feedResponse.feedUrl
-            }
-            const items = feedResponse.items.map((item) => Object.assign(item, { itemDate: new Date(item.isoDate), feedTitle: feed.title, feedLink: feed.link }))
-
-            await db.feeds.put(feed)
-            await db.items.bulkPut(items)
-            commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-            alert(`${items.length} articles of ${feed.title} added`);
-        });
+        const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '');
+        if (error) {
+            alert(error);
+            return console.log(error)
+        }
+        const feed = await parser.parseURL(CORS_PROXY + discoveredUrl);
+        const items = feed.items.map((item) => Object.assign(item, { feedTitle: feed.title, feedLink: feed.link }))
+        const feedWithoutItems = Object.assign({}, feed, { items: [] })
+        await db.feeds.put(feedWithoutItems)
+        await db.items.bulkPut(items)
+        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+        dispatch('items/fetchAll')
+        alert(`${items.length} articles of ${feed.title} added`);
     },
 
-    async fetchAll({ commit, state }) {
+    async fetchAll({ commit, dispatch, state }) {
         commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-        commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
+        dispatch('items/fetchAll')
         let parser = new Parser();
-        const feedPromises = state.feeds.map(({ feedUrl }) => {
-            return parser.parseURL('https://cors-anywhere.herokuapp.com/' + feedUrl);
+        const feedPromises = state.list.map(({ feedUrl }) => {
+            return parser.parseURL(CORS_PROXY + feedUrl);
         });
         try {
             const resolvedfeeds = await Promise.all(feedPromises);
@@ -73,8 +64,8 @@ export const actions = {
             await db.feeds.bulkPut(feeds);
             await db.items.bulkPut(items);
             commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            commit("setItems", { items: (await db.items.orderBy('isoDate').reverse().toArray()) });
-            return state.feeds;
+            dispatch('items/fetchAll')
+            return state.list;
         } catch (message) {
             return console.log(message);
         }
@@ -82,27 +73,21 @@ export const actions = {
 };
 
 export const mutations = {
-    setItems(state, { items }) {
-        state.items = items;
-    },
     setFeeds(state, { feeds }) {
-        state.feeds = feeds;
-    },
-    setGroupedFeeds(state, { groupedFeeds }) {
-        state.groupedFeeds = groupedFeeds;
-    },
+        state.list = feeds;
+    }
 };
 function isValidHttpUrl(string) {
     let url;
-    
+
     try {
-      url = new URL(string);
+        url = new URL(string);
     } catch (_) {
-      return false;  
+        return false;
     }
-  
+
     return url.protocol === "http:" || url.protocol === "https:";
-  }
+}
 
 
 function parseFeeds(feeds) {
@@ -117,9 +102,9 @@ function parseFeeds(feeds) {
     return { feeds: _feeds, items: _items }
 }
 
-function findFeedFromURL(url, searchPrefix, callback) {
+async function findFeedFromURL(url, searchPrefix, callback) {
     if (!isValidHttpUrl(url)) {
-        return callback('Invalid URL:'+ url + '. Please enter a valid URL with http or https.')
+        return { error: 'Invalid URL:' + url + '. Please enter a valid URL with http or https.' }
     }
 
     const p = new URL(url),
@@ -137,10 +122,10 @@ function findFeedFromURL(url, searchPrefix, callback) {
     var feed = url.replace(/\/$/, "");
     var res = '';
 
-    if (!p.protocol) return callback(null, searchPrefix + url.split(' '));
+    if (!p.protocol) return { error: null, discovered: searchPrefix + url.split(' ') };
 
     if (p.host.endsWith('youtube.com') && p.path.startsWith('/channel') && p.path.split('/').length === 3)
-        return callback(null, videoPrefix + p.path.split('/')[2]);
+        return { error: null, discovered: videoPrefix + p.path.split('/')[2] };
 
     async function isRss(u) {
         const response = await fetch(CORS_PROXY + u).catch(e => { return false; });
@@ -172,17 +157,13 @@ function findFeedFromURL(url, searchPrefix, callback) {
 
     async function checkAll() {
         if (await (isRss(feed))) {
-
             return feed;
         } else {
-
             res = await checkTheDom(feed);
             if (res) {
                 return res;
             } else {
-
                 res = await checkSuspects(feed);
-
                 if (res) {
                     return res;
                 } else {
@@ -192,13 +173,10 @@ function findFeedFromURL(url, searchPrefix, callback) {
         }
     }
 
-    (async function () {
-        res = await (checkAll());
-        if (res)
-            return callback(null, res);
-        else
-            return callback('No feed found');
-    })();
 
-
+    res = await checkAll();
+    if (res)
+        return { error: null, discoveredUrl: res };
+    else
+        return { error: 'No feed found' };
 }

@@ -29,12 +29,17 @@
         }}</span>
         ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
       </small>
-      <nuxt-link
+      <br />
+      <div class="has-text-centered">
+        ^^^ <br>
+        <small>Open</small>
+      </div>
+      <!-- <nuxt-link
         :to="`article/${encrypt(article.link)}`"
         class="button is-fullwidth is-primary is-outlined mt-3"
       >
         View
-      </nuxt-link>
+      </nuxt-link> -->
     </div>
     <!-- <div class="card-image has-text-centered pt-5" v-if="article.enclosure" >
         <a :href="article.link"  class="has-text-primary"

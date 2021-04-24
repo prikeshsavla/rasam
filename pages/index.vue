@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      items: ({ feeds }) => feeds.items,
+      items: ({ feeds:{items} }) => items.list,
     }),
   },
 };

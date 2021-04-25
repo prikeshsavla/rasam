@@ -1,3 +1,8 @@
+[build]
+  command = "yarn run generate"
+  functions = "functions"
+  publish = "dist"
+
 [[redirects]]
   from = "/cors-proxy/*"
   to = ":splat"

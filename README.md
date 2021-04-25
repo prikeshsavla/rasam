@@ -25,6 +25,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Display Feed like Twitter cards
 - [x] Field to add new Feed
 - [x] Open Article on tap
-- [ ] Favorite a article
-- [ ] Dispay Feed like stories
+- [x] Favorite a article
+- [x] Dispay Feed like stories
 - [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart (Optional)

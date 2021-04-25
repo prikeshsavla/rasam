@@ -3,7 +3,7 @@ import Parser from 'rss-parser';
 import getFeeds from 'get-feeds';
 const CORS_PROXY = window.location.hostname === "localhost"
     ? "https://api.allorigins.win/raw?url="
-    : "/cors-proxy/";
+    : "https://api.allorigins.win/raw?url=";
 
 export const state = () => ({
     list: []

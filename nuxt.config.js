@@ -52,14 +52,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  },
-  generate: {
-    fallback: true
-  },
-  pwa:{
-    manifest: {
-      crossorigin: 'anonymous'
-     }
-   }
+  }
   
 }

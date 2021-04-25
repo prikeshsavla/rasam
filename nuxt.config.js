@@ -55,5 +55,11 @@ export default {
   },
   generate: {
     fallback: true
-  }
+  },
+  pwa:{
+    manifest: {
+      crossorigin: 'anonymous'
+     }
+   }
+  
 }

@@ -8,3 +8,8 @@
   to = "/index.html"
   status = 200
   force = true
+
+[[headers]]
+  for = "/cors-proxy/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

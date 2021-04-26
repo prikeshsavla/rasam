@@ -65,8 +65,9 @@ export const actions = {
 
             await db.feeds.bulkPut(feeds);
             await db.items.bulkPut(items);
+            await dispatch('items/fetchAll')
             commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-            dispatch('items/fetchAll')
+            
             dispatch('fetchStories')
             return state.list;
         } catch (message) {

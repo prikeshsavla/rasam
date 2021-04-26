@@ -36,7 +36,8 @@ export default {
   },
   methods: {
     back() {
-      this.$router.back();
+      // this.$router.back();
+      window.history.back()
     },
   },
   computed: {

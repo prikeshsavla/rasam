@@ -1,6 +1,7 @@
 import db from "@/plugins/db";
 import Parser from 'rss-parser';
 import getFeeds from 'get-feeds';
+import { encrypt } from "~/plugins/crypt";
 const CORS_PROXY = window.location.hostname === "localhost"
     ? "https://api.allorigins.win/raw?url="
     : "https://api.allorigins.win/raw?url=";
@@ -48,8 +49,9 @@ export const actions = {
     },
 
     async fetchAll({ commit, dispatch, state }) {
-        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
         dispatch('items/fetchAll')
+        commit("setFeeds", { feeds: (await db.feeds.toArray()) });
+        
         let parser = new Parser();
         const feedPromises = state.list.map(({ feedUrl }) => {
             return parser.parseURL(CORS_PROXY + feedUrl);
@@ -87,18 +89,19 @@ export const actions = {
                         type: "photo", // photo or video
                         length: 5, // photo timeout or video length in seconds - uses 3 seconds timeout for images if not set
                         src:
-                            "https://raw.githubusercontent.com/ramon82/assets/master/zuck.js/stories/1.jpg", // photo or video src
+                            "https://picsum.photos/id/237/400/600", // photo or video src
                         preview:
-                            "https://raw.githubusercontent.com/ramon82/assets/master/zuck.js/stories/1.jpg", // optional - item thumbnail to show in the story carousel instead of the story defined image
-                        link: item.link, // a link to click on story
+                            "https://picsum.photos/id/237/400/600", // optional - item thumbnail to show in the story carousel instead of the story defined image
+                        link: `/article/${encrypt(item.link)}`, // a link to click on story
                         linkText: item.title, // link text
                         time: (new Date(item.isoDate)).getTime() / 1000,
                         seen: false,
+                        contentsnippet: item.contentSnippet
                     }
                 })
             }
         })
-        await commit("setStories", { stories });
+        commit("setStories", { stories });
         return stories;
     },
 };

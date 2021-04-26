@@ -3,9 +3,10 @@
     <div class="block">
       <feed-input></feed-input>
       <div v-if="stories && stories.length > 0">
-        
-        <stories :stories="Object.assign({}, stories)" />
+        <stories :stories="stories" />
       </div>
+
+      <nuxt-link class="button is-primary is-outlined is-fullwidth is-small" to="play-stories">Alt Stories</nuxt-link>
     </div>
 
     <div class="columns is-multiline">
@@ -33,9 +34,9 @@
 import { mapState } from "vuex";
 
 export default {
-  async mounted() {
-    await this.$store.dispatch("feeds/fetchAll");
-    await this.$store.dispatch("feeds/fetchStories");
+  async fetch() {
+    this.$store.dispatch("feeds/fetchStories");
+    this.$store.dispatch("feeds/fetchAll");
   },
   computed: {
     ...mapState({

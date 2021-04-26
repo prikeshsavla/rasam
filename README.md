@@ -27,5 +27,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Open Article on tap
 - [x] Favorite a article
 - [x] Dispay Feed like stories
-- [ ] Zuckjs for stories https://github.com/ramon82/zuck.js/
+- [x] Zuckjs for stories https://github.com/ramon82/zuck.js/
+- [ ] Add Pagination for items
 - [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart (Optional)

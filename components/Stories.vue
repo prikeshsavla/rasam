@@ -1,121 +1,98 @@
 <template>
   <div>
-    <div id="stories" class="storiesWrapper">
-      <!-- story -->
-      <div
-        v-for="story in stories"
-        :key="story.id"
-        class="story"
-        :class="{ seen: story.seen }"
-        :data-id="story.id"
-        :data-last-updated="story.lastUpdated"
-        :data-photo="story.photo"
-      >
-        <a class="item-link" :href="story.link">
-          <span class="item-preview">
-            <img :src="story.photo" />
-          </span>
-          <span
-            class="info"
-            itemProp="author"
-            itemScope=""
-            itemType="http://schema.org/Person"
-          >
-            <strong class="name" itemProp="name">{{ story.name }}</strong>
-            <span class="time">{{ story.lastUpdated }}</span>
-          </span>
-        </a>
-
-        <ul class="items">
-          <!-- story item -->
-          <li
-            v-for="storyItem in story.items"
-            :key="storyItem.id"
-            :data-id="storyItem.id"
-            :data-time="storyItem.time"
-            :class="storyItem.seen"
-          >
-            <a
-              :href="storyItem.src"
-              :data-type="storyItem.type"
-              :data-length="storyItem.length"
-              :data-link="storyItem.link"
-              :data-linkText="storyItem.linkText"
-            >
-              <img :src="storyItem.preview" />
-            </a>
-          </li>
-          <!--/ story item -->
-        </ul>
-      </div>
-      <!--/ story -->
-    </div>
+    <div id="stories" class="storiesWrapper"></div>
   </div>
 </template>
+
+
 
 <script>
 import Zuck from "zuck.js";
 import css from "zuck.js/dist/zuck.min.css";
 import skin from "zuck.js/dist/skins/facesnap.min.css";
+import format from "@/plugins/registerTimeago";
 export default {
   props: ["stories"],
   async mounted() {
-    var stories = new Zuck("stories", {
+    const object = this.stories.map((story) => {
+      return { ...story };
+    });
+
+    const language = {
+      // if you need to translate :)
+      unmute: "Touch to unmute",
+      keyboardTip: "Press space to see next",
+      visitLink: "Visit link",
+      time: {
+        ago: "ago",
+        hour: "hour",
+        hours: "hours",
+        minute: "minute",
+        minutes: "minutes",
+        fromnow: "from now",
+        seconds: "seconds",
+        yesterday: "yesterday",
+        tomorrow: "tomorrow",
+        days: "days",
+      },
+    };
+    var storiesViewer = new Zuck("stories", {
       backNative: true,
       previousTap: true,
       skin: "facesnap",
-      avatars: false,
-      list: false,
       autoFullScreen: false,
-      cubeEffect: true,
+      avatars: true,
       paginationArrows: false,
+      list: false,
+      cubeEffect: true,
       localStorage: true,
-      reactive: true,
+      stories: object,
+      language: language,
       template: {
         viewerItemBody(index, currentIndex, item) {
-          return `<div 
-                    class="item ${get(item, "seen") === true ? "seen" : ""} ${
-            currentIndex === index ? "active" : ""
-          }"
+          const article = JSON.parse(JSON.stringify(item));
+          console.log(article);
+          return `<div  class="item ${
+            get(item, "seen") === true ? "seen" : ""
+          } ${currentIndex === index ? "active" : ""}"
                     data-time="${get(item, "time")}" data-type="${get(
             item,
             "type"
           )}" data-index="${index}" data-item-id="${get(item, "id")}">
-                    <h1> HELLO </h1>
-                    ${
-                      get(item, "type") === "video"
-                        ? `<video class="media" muted webkit-playsinline playsinline preload="auto" src="${get(
-                            item,
-                            "src"
-                          )}" ${get(item, "type")}></video>
-                        `
-                        : `<img loading="auto" class="media" src="${get(
-                            item,
-                            "src"
-                          )}" ${get(item, "type")} />
-                    `
-                    }
-                    F
+
+                  <div class="card">
+                    <div class="card-content">
+                      <strong class="has-text-primary is-clipped double-line-only">
+                        ${article.linkText}
+                      </strong>
+                        <div class="is-clipped line-clamp">
+                        ${article.contentsnippet}
+                        </div>  
+                        <small>
+                          <span class="is-6 has-text-weight-medium has-text-grey">
+                          ${article.author}
+                          </span>
+                         
+                          ~<time class="has-text-grey" >${format(
+                            article.time * 1000,
+                            "slim"
+                          )}</time>
+                        </small> 
+                      </div>
+                    </div>
                     ${
                       get(item, "link")
-                        ? `<a class="tip link" href="${get(
-                            item,
-                            "link"
-                          )}" rel="noopener" target="_blank">
-                            ${
-                              !get(item, "linkText") ||
-                              get(item, "linkText") === ""
-                                ? ""
-                                : get(item, "linkText")
-                            }
+                        ? `<a class="tip link" href="${get(item, "link")}" >
+                            ${language.visitLink}
                           </a>`
                         : ""
                     }
-                  </div>`;
+                </div>`;
         },
       },
-      stories: this.stories || [],
     });
+
+    console.log(storiesViewer);
   },
 };
 
@@ -132,10 +109,71 @@ const get = function (array, what) {
 .stories.carousel .story > .item-link > .info .name {
   font-size: 0.8em;
 }
+#zuck-modal-content .story-viewer .head .left .info {
+  max-width: 70vw;
+}
+#zuck-modal-content .story-viewer.with-back-button .head .left .item-preview {
+  margin-left: 0;
+}
+
+#zuck-modal-content .story-viewer.with-back-button .head .left>.back {
+  display: none;
+}
+#zuck-modal-content .story-viewer .head .left .info .time {
+  display: none;
+}
+#zuck-modal-content .story-viewer .head .left .info .name {
+  font-size: 0.8em;
+}
 .storiesWrapper {
   padding: 0;
-  max-width: 500px;
-  height: 100px;
   margin: 0 auto;
+}
+
+#zuck-modal-content .story-viewer .slides .item {
+  background: #fff;
+}
+
+#zuck-modal-content .story-viewer .slides .item .card {
+  position: absolute;
+  bottom: 60px;
+  box-shadow: none !important;
+  border-radius: 0px;
+}
+
+#zuck-modal-content .story-viewer .slides .item .tip.link {
+  background: none;
+  color: #000;
+}
+/* #zuck-modal-content .story-viewer .head {
+  background: rgba(0,0,0,0.2);
+}
+#zuck-modal-content .story-viewer .head .left .info .name {
+    color: #fff;
+} */
+
+#zuck-modal-content .story-viewer .slides-pointers > * > * {
+  display: table-cell;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+#zuck-modal-content .story-viewer .slides-pointers > * > .seen {
+  background: #000;
+}
+#zuck-modal-content .story-viewer .slides-pointers > * > * > b {
+  background: #000;
+  width: auto;
+  max-width: 0;
+  height: 2px;
+  display: block;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+  border-radius: 2px;
+}
+
+#zuck-modal-content .story-viewer .head {
+  text-shadow: none;
 }
 </style>

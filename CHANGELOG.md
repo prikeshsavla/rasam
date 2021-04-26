@@ -1,3 +1,9 @@
+## [0.6.0] - Refactor Code
+
+* Add Support for ZuckJs for stories
+* Update old Stories view
+* Refactor feeds and stories store
+
 ## [0.5.0] - Refactor Code
 
 * Add Support to favorite an article

@@ -24,7 +24,7 @@ export const getters = {
 
 export const actions = {
     async getItemsGroupedByFeeds({ commit }) {
-        const groupedFeeds = await getGroupedFeeds()
+        const groupedFeeds = await getGroupedItems()
         commit("setGroupedFeeds", { groupedFeeds });
         return groupedFeeds;
     },
@@ -44,14 +44,15 @@ export const actions = {
         await db.feeds.put(feedWithoutItems)
         await db.items.bulkPut(items)
         commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-        dispatch('items/fetchAll')
+        await dispatch('items/fetchAll')
+        dispatch('fetchStories')
         alert(`${items.length} articles of ${feed.title} added`);
     },
 
     async fetchAll({ commit, dispatch, state }) {
         dispatch('items/fetchAll')
         commit("setFeeds", { feeds: (await db.feeds.toArray()) });
-        
+        dispatch('fetchStories')
         let parser = new Parser();
         const feedPromises = state.list.map(({ feedUrl }) => {
             return parser.parseURL(CORS_PROXY + feedUrl);
@@ -215,7 +216,7 @@ async function findFeedFromURL(url, searchPrefix, callback) {
     if (res)
         return { error: null, discoveredUrl: res };
     else
-        return { error: 'No feed found' };
+        return { error: 'No feed found for url: '+ url };
 }
 
 

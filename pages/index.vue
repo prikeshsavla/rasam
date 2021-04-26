@@ -2,12 +2,10 @@
   <div class="container p-3">
     <div class="block">
       <feed-input></feed-input>
-      <nuxt-link
-        to="stories"
-        class="button is-fullwidth is-primary is-outlined"
-        prefetch
-        >Stories</nuxt-link
-      >
+      <div v-if="stories && stories.length > 0">
+        
+        <stories :stories="Object.assign({}, stories)" />
+      </div>
     </div>
 
     <div class="columns is-multiline">
@@ -37,10 +35,12 @@ import { mapState } from "vuex";
 export default {
   async mounted() {
     await this.$store.dispatch("feeds/fetchAll");
+    await this.$store.dispatch("feeds/fetchStories");
   },
   computed: {
     ...mapState({
-      items: ({ feeds:{items} }) => items.list,
+      items: ({ feeds: { items } }) => items.list,
+      stories: ({ feeds }) => feeds.stories,
     }),
   },
 };

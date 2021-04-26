@@ -8630,3 +8630,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zuck.js@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/zuck.js/-/zuck.js-1.6.0.tgz#5fefff0d014a0be5ce3d3e48524b6cb00f20cc7a"
+  integrity sha512-3qmtPkymsnIC1ekjzqwfSpqrVEMU6KMovQOB+Hj+LuykxtcsQcOfhRJDgyOJvA15NC6PYhiBJQTDO2N1XCCH6Q==

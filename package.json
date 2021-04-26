@@ -20,7 +20,8 @@
     "nuxt": "^2.15.3",
     "rss-finder": "^2.1.5",
     "rss-parser": "^3.12.0",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "zuck.js": "^1.6.0"
   },
   "devDependencies": {}
 }

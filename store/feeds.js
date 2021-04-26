@@ -5,21 +5,20 @@ const CORS_PROXY = window.location.hostname === "localhost"
     ? "https://api.allorigins.win/raw?url="
     : "https://api.allorigins.win/raw?url=";
 
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const STORY_INTERVAL = DAY * 7
+
 export const state = () => ({
-    list: []
+    list: [],
+    stories: []
 });
 
 
 export const getters = {
-    authUser(state) {
-        return state.user || null;
-    },
-    isAuthenticated(state) {
-        return !!state.user;
-    },
-    isAdmin(state) {
-        return state.user && state.user.role && state.user.role === "admin";
-    },
+
 };
 
 export const actions = {
@@ -70,12 +69,47 @@ export const actions = {
             return console.log(message);
         }
     },
+    async fetchStories({ commit }) {
+
+        const groupedFeeds = await getGroupedItems()
+
+        const stories = groupedFeeds.map((story) => {
+
+            return {
+                id: story.link, // story id
+                photo: story.image && story.image.url ? story.image.url : `https://ui-avatars.com/api/?background=random&name=${story.title}`, // story photo (or user photo)
+                name: story.title, // story name (or user name)
+                lastUpdated: new Date(story.lastBuildDate).getTime(),
+                seen: false,// last updated date in unix time format
+                items: story.items.map((item) => {
+                    return {
+                        id: item.link, // item id
+                        type: "photo", // photo or video
+                        length: 5, // photo timeout or video length in seconds - uses 3 seconds timeout for images if not set
+                        src:
+                            "https://raw.githubusercontent.com/ramon82/assets/master/zuck.js/stories/1.jpg", // photo or video src
+                        preview:
+                            "https://raw.githubusercontent.com/ramon82/assets/master/zuck.js/stories/1.jpg", // optional - item thumbnail to show in the story carousel instead of the story defined image
+                        link: item.link, // a link to click on story
+                        linkText: item.title, // link text
+                        time: (new Date(item.isoDate)).getTime() / 1000,
+                        seen: false,
+                    }
+                })
+            }
+        })
+        await commit("setStories", { stories });
+        return stories;
+    },
 };
 
 export const mutations = {
     setFeeds(state, { feeds }) {
         state.list = feeds;
-    }
+    },
+    setStories(state, { stories }) {
+        state.stories = stories;
+    },
 };
 function isValidHttpUrl(string) {
     let url;
@@ -179,4 +213,24 @@ async function findFeedFromURL(url, searchPrefix, callback) {
         return { error: null, discoveredUrl: res };
     else
         return { error: 'No feed found' };
+}
+
+
+async function getGroupedItems(afterDate = (new Date() - STORY_INTERVAL)) {
+
+    // Query
+    const feeds = await db.feeds.toArray();
+
+    // using parallel queries:
+    await Promise.all(feeds.map(async feed => {
+        feed.items = await db.items.where('feedLink')
+            .equals(feed.link)
+            .and(function (item) { return new Date(item.isoDate) > afterDate })
+            .reverse()
+            .sortBy('isoDate');
+    }));
+
+    return feeds.filter((feed) => feed.items.length > 0).sort((nextFeed, previousFeed) => {
+        return (new Date(previousFeed.items[0].isoDate)) - (new Date(nextFeed.items[0].isoDate))
+    });
 }

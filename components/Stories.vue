@@ -14,51 +14,60 @@ import format from "@/plugins/registerTimeago";
 export default {
   props: ["stories"],
   async mounted() {
-    const object = this.stories.map((story) => {
-      return { ...story };
-    });
+    this.buildStoriesViewer();
+  },
+  watch: {
+    stories() {
+      this.buildStoriesViewer();
+    },
+  },
+  methods: {
+    buildStoriesViewer() {
+      const object = this.stories.map((story) => {
+        return { ...story };
+      });
 
-    const language = {
-      // if you need to translate :)
-      unmute: "Touch to unmute",
-      keyboardTip: "Press space to see next",
-      visitLink: "Visit link",
-      time: {
-        ago: "ago",
-        hour: "hour",
-        hours: "hours",
-        minute: "minute",
-        minutes: "minutes",
-        fromnow: "from now",
-        seconds: "seconds",
-        yesterday: "yesterday",
-        tomorrow: "tomorrow",
-        days: "days",
-      },
-    };
-    var storiesViewer = new Zuck("stories", {
-      backNative: true,
-      previousTap: true,
-      skin: "facesnap",
-      autoFullScreen: false,
-      avatars: true,
-      paginationArrows: false,
-      list: false,
-      cubeEffect: true,
-      localStorage: true,
-      stories: object,
-      language: language,
-      template: {
-        viewerItemBody(index, currentIndex, item) {
-          const article = JSON.parse(JSON.stringify(item));
-          console.log(article);
-          return `<div  class="item ${
-            get(item, "seen") === true ? "seen" : ""
-          } ${currentIndex === index ? "active" : ""}"
+      const language = {
+        // if you need to translate :)
+        unmute: "Touch to unmute",
+        keyboardTip: "Press space to see next",
+        visitLink: "Visit link",
+        time: {
+          ago: "ago",
+          hour: "hour",
+          hours: "hours",
+          minute: "minute",
+          minutes: "minutes",
+          fromnow: "from now",
+          seconds: "seconds",
+          yesterday: "yesterday",
+          tomorrow: "tomorrow",
+          days: "days",
+        },
+      };
+      var storiesViewer = new Zuck("stories", {
+        backNative: true,
+        previousTap: true,
+        skin: "facesnap",
+        autoFullScreen: false,
+        avatars: true,
+        paginationArrows: false,
+        list: false,
+        cubeEffect: true,
+        localStorage: true,
+        stories: object,
+        language: language,
+        template: {
+          viewerItemBody(index, currentIndex, item) {
+            const article = JSON.parse(JSON.stringify(item));
+            console.log(article);
+            return `<div  class="item ${
+              get(item, "seen") === true ? "seen" : ""
+            } ${currentIndex === index ? "active" : ""}"
                     data-time="${get(item, "time")}" data-type="${get(
-            item,
-            "type"
-          )}" data-index="${index}" data-item-id="${get(item, "id")}">
+              item,
+              "type"
+            )}" data-index="${index}" data-item-id="${get(item, "id")}">
 
                   <div class="card">
                     <div class="card-content">
@@ -88,11 +97,10 @@ export default {
                         : ""
                     }
                 </div>`;
+          },
         },
-      },
-    });
-
-    console.log(storiesViewer);
+      });
+    },
   },
 };
 
@@ -116,7 +124,7 @@ const get = function (array, what) {
   margin-left: 0;
 }
 
-#zuck-modal-content .story-viewer.with-back-button .head .left>.back {
+#zuck-modal-content .story-viewer.with-back-button .head .left > .back {
   display: none;
 }
 #zuck-modal-content .story-viewer .head .left .info .time {

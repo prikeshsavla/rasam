@@ -27,7 +27,7 @@
         {{ article.contentSnippet }}
       </div>
       <small>
-        <a :href="this.article.feedLink" class="has-text-primary">{{
+        <a :href="article.feedLink" class="has-text-primary">{{
           feedLink
         }}</a> </small
       ><br />
@@ -39,7 +39,7 @@
       </small>
       <like-button
         :link="article.link"
-        :likedAt="article.likedAt"
+        :liked-at="article.likedAt"
       ></like-button>
     </div>
     <!-- <div class="card-image has-text-centered pt-5" v-if="article.enclosure" >
@@ -56,33 +56,38 @@
 </template>
 
 <script>
-import { encrypt } from "@/plugins/crypt";
-import TimeAgo from "./TimeAgo.vue";
+import { encrypt } from '@/plugins/crypt'
+import TimeAgo from './TimeAgo.vue'
 export default {
   components: { TimeAgo },
-  props: ["article"],
-  methods: {
-    formatDate(dateString) {
-      const dateObj = new Date(dateString);
-      return dateObj.toLocaleDateString();
+  props: {
+    article: {
+      type: Object,
+      required: true,
     },
-    encrypt,
   },
   computed: {
     feedLink() {
-      const url = new URL(this.article.feedLink);
+      const url = new URL(this.article.feedLink)
       return url.href
-        .replace("www.", "")
-        .replace(/http(s):\/\//, "")
-        .replace(/\/$/, "");
+        .replace('www.', '')
+        .replace(/http(s):\/\//, '')
+        .replace(/\/$/, '')
     },
     author() {
       return (
         this.article.author || this.article.creator || this.article.feedTitle
-      );
+      )
     },
   },
-};
+  methods: {
+    formatDate(dateString) {
+      const dateObj = new Date(dateString)
+      return dateObj.toLocaleDateString()
+    },
+    encrypt,
+  },
+}
 </script>
 
 <style>

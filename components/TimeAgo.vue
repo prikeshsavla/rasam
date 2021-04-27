@@ -3,23 +3,27 @@
 </template>
 
 <script>
-import format from "@/plugins/registerTimeago";
+import format from '@/plugins/registerTimeago'
 
 export default {
-  props: ["date"],
-  methods: {},
+  props: {
+    date: {
+      type: [Date, String],
+      required: true,
+    },
+  },
   computed: {
     timeAgoString() {
-      return format(this.date, "slim");
+      return format(this.date, 'slim')
     },
     isoDate() {
       const date =
-        typeof this.date === "object" ? this.date : new Date(this.date);
-      return date.toISOString();
+        typeof this.date === 'object' ? this.date : new Date(this.date)
+      return date.toISOString()
     },
   },
-};
+  methods: {},
+}
 </script>
 
-<style>
-</style>
+<style></style>

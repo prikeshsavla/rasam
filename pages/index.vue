@@ -6,14 +6,18 @@
         <stories :stories="stories" />
       </div>
 
-      <nuxt-link class="button is-primary is-outlined is-fullwidth is-small" to="play-stories">Alt Stories</nuxt-link>
+      <nuxt-link
+        class="button is-primary is-outlined is-fullwidth is-small"
+        to="play-stories"
+        >Alt Stories</nuxt-link
+      >
     </div>
 
     <div class="columns is-multiline">
       <div
-        class="column is-flex is-4 p-0"
         v-for="item in items"
         :key="item.link"
+        class="column is-flex is-4 p-0"
       >
         <card :article="item" />
       </div>
@@ -31,12 +35,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
 export default {
   async fetch() {
-    this.$store.dispatch("feeds/fetchStories");
-    this.$store.dispatch("feeds/fetchAll");
+    await this.$store.dispatch('feeds/fetchStories')
+    await this.$store.dispatch('feeds/fetchAll')
   },
   computed: {
     ...mapState({
@@ -44,7 +48,7 @@ export default {
       stories: ({ feeds }) => feeds.stories,
     }),
   },
-};
+}
 </script>
 
 <style>

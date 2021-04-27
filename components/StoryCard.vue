@@ -19,7 +19,7 @@
         {{ article.contentSnippet }}
       </div>
       <small>
-        <a :href="this.article.feedLink" class="has-text-primary">{{
+        <a :href="article.feedLink" class="has-text-primary">{{
           feedLink
         }}</a> </small
       ><br />
@@ -31,7 +31,7 @@
       </small>
       <br />
       <div class="has-text-centered">
-        ^^^ <br>
+        ^^^ <br />
         <small>Open</small>
       </div>
       <!-- <nuxt-link
@@ -55,29 +55,34 @@
 </template>
 
 <script>
-import TimeAgo from "./TimeAgo.vue";
-import { encrypt } from "@/plugins/crypt";
+import { encrypt } from '@/plugins/crypt'
+import TimeAgo from './TimeAgo.vue'
 export default {
   components: { TimeAgo },
-  props: ["article"],
-  methods: {
-    encrypt,
+  props: {
+    article: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     feedLink() {
-      const url = new URL(this.article.feedLink);
+      const url = new URL(this.article.feedLink)
       return url.href
-        .replace("www.", "")
-        .replace(/http(s):\/\//, "")
-        .replace(/\/$/, "");
+        .replace('www.', '')
+        .replace(/http(s):\/\//, '')
+        .replace(/\/$/, '')
     },
     author() {
       return (
         this.article.author || this.article.creator || this.article.feedTitle
-      );
+      )
     },
   },
-};
+  methods: {
+    encrypt,
+  },
+}
 </script>
 
 <style>

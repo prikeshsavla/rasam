@@ -4,51 +4,55 @@
   </div>
 </template>
 
-
-
 <script>
-import Zuck from "zuck.js";
-import css from "zuck.js/dist/zuck.min.css";
-import skin from "zuck.js/dist/skins/facesnap.min.css";
-import format from "@/plugins/registerTimeago";
+import Zuck from 'zuck.js'
+import 'zuck.js/dist/zuck.min.css'
+import 'zuck.js/dist/skins/facesnap.min.css'
+import format from '@/plugins/registerTimeago'
+
 export default {
-  props: ["stories"],
-  async mounted() {
-    this.buildStoriesViewer();
+  props: {
+    stories: {
+      type: Array,
+      required: true,
+    },
   },
   watch: {
     stories() {
-      this.buildStoriesViewer();
+      this.buildStoriesViewer()
     },
+  },
+  mounted() {
+    this.buildStoriesViewer()
   },
   methods: {
     buildStoriesViewer() {
       const object = this.stories.map((story) => {
-        return { ...story };
-      });
+        return { ...story }
+      })
 
       const language = {
         // if you need to translate :)
-        unmute: "Touch to unmute",
-        keyboardTip: "Press space to see next",
-        visitLink: "Visit link",
+        unmute: 'Touch to unmute',
+        keyboardTip: 'Press space to see next',
+        visitLink: 'Visit link',
         time: {
-          ago: "ago",
-          hour: "hour",
-          hours: "hours",
-          minute: "minute",
-          minutes: "minutes",
-          fromnow: "from now",
-          seconds: "seconds",
-          yesterday: "yesterday",
-          tomorrow: "tomorrow",
-          days: "days",
+          ago: 'ago',
+          hour: 'hour',
+          hours: 'hours',
+          minute: 'minute',
+          minutes: 'minutes',
+          fromnow: 'from now',
+          seconds: 'seconds',
+          yesterday: 'yesterday',
+          tomorrow: 'tomorrow',
+          days: 'days',
         },
-      };
-      var storiesViewer = new Zuck("stories", {
+      }
+      Zuck('stories', {
         backNative: true,
         previousTap: true,
-        skin: "facesnap",
+        skin: 'facesnap',
         autoFullScreen: false,
         avatars: true,
         paginationArrows: false,
@@ -56,18 +60,18 @@ export default {
         cubeEffect: true,
         localStorage: true,
         stories: object,
-        language: language,
+        language,
         template: {
           viewerItemBody(index, currentIndex, item) {
-            const article = JSON.parse(JSON.stringify(item));
-            console.log(article);
+            const article = JSON.parse(JSON.stringify(item))
+            // console.log(article)
             return `<div  class="item ${
-              get(item, "seen") === true ? "seen" : ""
-            } ${currentIndex === index ? "active" : ""}"
-                    data-time="${get(item, "time")}" data-type="${get(
+              get(item, 'seen') === true ? 'seen' : ''
+            } ${currentIndex === index ? 'active' : ''}"
+                    data-time="${get(item, 'time')}" data-type="${get(
               item,
-              "type"
-            )}" data-index="${index}" data-item-id="${get(item, "id")}">
+              'type'
+            )}" data-index="${index}" data-item-id="${get(item, 'id')}">
 
                   <div class="card">
                     <div class="card-content">
@@ -84,36 +88,36 @@ export default {
                          
                           ~<time class="has-text-grey" >${format(
                             article.time * 1000,
-                            "slim"
+                            'slim'
                           )}</time>
                         </small> 
                       </div>
                     </div>
                     ${
-                      get(item, "link")
-                        ? `<a class="tip link" href="${get(item, "link")}" >
+                      get(item, 'link')
+                        ? `<a class="tip link" href="${get(item, 'link')}" >
                             ${language.visitLink}
                           </a>`
-                        : ""
+                        : ''
                     }
-                </div>`;
+                </div>`
           },
         },
-      });
+      })
     },
   },
-};
+}
 
 const get = function (array, what) {
   if (array) {
-    return array[what] || "";
+    return array[what] || ''
   } else {
-    return "";
+    return ''
   }
-};
+}
 </script>
 
-<style >
+<style>
 .stories.carousel .story > .item-link > .info .name {
   font-size: 0.8em;
 }

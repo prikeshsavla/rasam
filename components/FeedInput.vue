@@ -2,8 +2,8 @@
   <div class="field has-addons">
     <div class="control">
       <input
-        class="input"
         v-model="feedURL"
+        class="input"
         type="url"
         placeholder="Add a Blog/Feed"
       />
@@ -25,20 +25,19 @@
 export default {
   data() {
     return {
-      feedURL: "",
+      feedURL: '',
       isLoading: false,
-      buttonText: "Add",
-    };
+      buttonText: 'Add',
+    }
   },
   methods: {
     async addFeed() {
-      this.isLoading = true;
-      await this.$store.dispatch("feeds/addFeed", { url: this.feedURL });
-      this.isLoading = false;
+      this.isLoading = true
+      await this.$store.dispatch('feeds/addFeed', { url: this.feedURL })
+      this.isLoading = false
     },
   },
-};
+}
 </script>
 
-<style>
-</style>
+<style></style>

@@ -124,13 +124,13 @@ const get = function (array, what) {
 #zuck-modal-content .story-viewer .head .left .info {
   max-width: 70vw;
 }
-#zuck-modal-content .story-viewer.with-back-button .head .left .item-preview {
-  margin-left: 0;
-}
+/* #zuck-modal-content .story-viewer.with-back-button .head .left .item-preview {
+    margin-left: 0;
+  } */
 
-#zuck-modal-content .story-viewer.with-back-button .head .left > .back {
+/* #zuck-modal-content .story-viewer.with-back-button .head .left > .back {
   display: none;
-}
+} */
 #zuck-modal-content .story-viewer .head .left .info .time {
   display: none;
 }

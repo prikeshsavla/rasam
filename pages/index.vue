@@ -1,29 +1,32 @@
 <template>
-  <div class="container p-3">
-    <div class="block">
-      <feed-input></feed-input>
-      <div v-if="stories && stories.length > 0">
-        <stories :stories="stories" />
+  <main>
+    <navbar />
+
+    <div class="container p-3">
+      <div class="block">
+        <!-- <    feed-input></feed-input> -->
+        <div v-if="stories && stories.length > 0">
+          <stories :stories="stories" />
+        </div>
+
+        <nuxt-link
+          class="button is-primary is-outlined is-fullwidth is-small"
+          to="play-stories"
+          >Alt Stories</nuxt-link
+        >
       </div>
 
-      <nuxt-link
-        class="button is-primary is-outlined is-fullwidth is-small"
-        to="play-stories"
-        >Alt Stories</nuxt-link
-      >
-    </div>
-
-    <div class="columns is-multiline">
-      <div
-        v-for="item in items"
-        :key="item.link"
-        class="column is-flex is-4 p-0"
-      >
-        <card :article="item" />
+      <div class="columns is-multiline">
+        <div
+          v-for="item in items"
+          :key="item.link"
+          class="column is-flex is-4 p-0"
+        >
+          <card :article="item" />
+        </div>
       </div>
-    </div>
 
-    <!-- <nav
+      <!-- <nav
       class="pagination is-centered"
       role="navigation"
       aria-label="pagination"
@@ -31,7 +34,8 @@
       <a class="pagination-previous">Previous</a>
       <a class="pagination-next">Next page</a>
     </nav> -->
-  </div>
+    </div>
+  </main>
 </template>
 
 <script>

@@ -27,7 +27,7 @@ export default {
     return {
       feedURL: '',
       isLoading: false,
-      buttonText: 'Add',
+      buttonText: '+',
     }
   },
   methods: {

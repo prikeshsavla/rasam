@@ -1,29 +1,33 @@
 <template>
-  <section class="section px-3 pt-3">
-    <div class="container">
-      <button
-        class="button is-fullwidth is-primary is-outlined mt-3"
-        @click="back"
-      >
-        Back
-      </button>
-      <small>
-        {{ article.feedTitle }}
-      </small>
-      <h1 class="title mb-3 mt-5 is-4">
-        <a :href="article.link"> {{ article.title }}</a>
-      </h1>
-      <small>{{ article.contentSnippet }}</small> <br />
-      <small>
-        {{ author }} ~<time-ago
-          class="has-text-grey"
-          :date="article.isoDate"
-        ></time-ago
-      ></small>
-      <hr class="my-3" />
-      <div class="content" v-html="content"></div>
-    </div>
-  </section>
+  <main>
+    <navbar />
+
+    <section class="section px-3 pt-3">
+      <div class="container">
+        <button
+          class="button is-fullwidth is-primary is-outlined mt-3"
+          @click="back"
+        >
+          Back
+        </button>
+        <small>
+          {{ article.feedTitle }}
+        </small>
+        <h1 class="title mb-3 mt-5 is-4">
+          <a :href="article.link"> {{ article.title }}</a>
+        </h1>
+        <small>{{ article.contentSnippet }}</small> <br />
+        <small>
+          {{ author }} ~<time-ago
+            class="has-text-grey"
+            :date="article.isoDate"
+          ></time-ago
+        ></small>
+        <hr class="my-3" />
+        <div class="content" v-html="content"></div>
+      </div>
+    </section>
+  </main>
 </template>
 
 <script>

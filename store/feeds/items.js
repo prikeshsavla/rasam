@@ -3,9 +3,18 @@ import { decrypt } from '@/plugins/crypt'
 export const state = () => ({
   list: [],
   item: {},
+  page: 1,
+  show: 20,
 })
 
-export const getters = {}
+export const getters = {
+  paginatedList(state) {
+    return state.list.slice(0, state.page * state.show)
+  },
+  pages(state) {
+    return Math.ceil(state.list.length / state.show)
+  },
+}
 
 export const actions = {
   async fetchAll({ commit }) {
@@ -41,13 +50,22 @@ export const actions = {
     )
     return state.item
   },
+  nextPage({ state, commit }) {
+    const maxPages = Math.ceil(state.list.length / state.show)
+    if (state.page + 1 <= maxPages) {
+      commit('setPage', state.page + 1)
+    }
+  },
 }
 
 export const mutations = {
-  setItems(state, items) {
-    state.list = items
+  setItems(state, list) {
+    state.list = list || []
   },
   setItem(state, item) {
     state.item = item
+  },
+  setPage(state, page) {
+    state.page = page || 1
   },
 }

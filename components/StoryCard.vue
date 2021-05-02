@@ -1,57 +1,28 @@
 <template>
-  <div style="width: 100%">
-    <div class="card-content p-3">
-      <p>
-        <small>
-          <span class="is-6 is-clipped single-line-only has-text-weight-medium">
-            {{ article.feedTitle }}
-          </span>
-        </small>
-      </p>
+  <v-container>
+    <small class="mb-1">{{ article.feedTitle }}</small>
+    <h2 class="mt-1">
       <nuxt-link
         :to="`article/${encrypt(article.link)}`"
-        class="has-text-primary is-clipped double-line-only"
+        class="text-decoration-none black--text"
       >
-        <strong>{{ article.title }}</strong></nuxt-link
-      >
+        <strong>{{ article.title }}</strong>
+      </nuxt-link>
+    </h2>
 
-      <div class="is-clipped line-clamp">
-        {{ article.contentSnippet }}
-      </div>
-      <small>
-        <a :href="article.feedLink" class="has-text-primary">{{
-          feedLink
-        }}</a> </small
-      ><br />
-      <small>
-        <span class="is-6 has-text-weight-medium has-text-grey">{{
-          author
-        }}</span>
-        ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
-      </small>
-      <br />
-      <div class="has-text-centered">
-        ^^^ <br />
-        <small>Open</small>
-      </div>
-      <!-- <nuxt-link
-        :to="`article/${encrypt(article.link)}`"
-        class="button is-fullwidth is-primary is-outlined mt-3"
-      >
-        View
-      </nuxt-link> -->
+    <div>
+      {{ article.contentSnippet }}
     </div>
-    <!-- <div class="card-image has-text-centered pt-5" v-if="article.enclosure" >
-        <a :href="article.link"  class="has-text-primary"
-              >
-         <img
-          class="block" 
-            :src="article.enclosure.url"
-            alt="Placeholder image" style="max-height: 200px; object-fit: contain;"
-          />
-        </a>
-      </div> -->
-  </div>
+
+    <small>
+      <span class="grey--text">{{ author }}</span>
+      ~<time-ago class="grey--text" :date="article.isoDate"></time-ago>
+    </small>
+    <div class="text-center mt-3">
+      ^^^ <br />
+      Open
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -85,34 +56,4 @@ export default {
 }
 </script>
 
-<style>
-html {
-  --lh: 1.4rem;
-  line-height: var(--lh);
-}
-
-.line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
-.single-line-only {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-
-.double-line-only {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-/* 
-https://daily-dev-tips.com/posts/css-truncate-text-with-ellipsis/
- */
-.card.is-rounded {
-  border-radius: 0.5em;
-}
-</style>
+<style></style>

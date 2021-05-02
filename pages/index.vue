@@ -1,55 +1,101 @@
 <template>
-  <main>
-    <navbar />
-
-    <div class="container p-3">
-      <div class="block">
-        <!-- <    feed-input></feed-input> -->
-        <div v-if="stories && stories.length > 0">
-          <stories :stories="stories" />
-        </div>
-
-        <nuxt-link
-          class="button is-primary is-outlined is-fullwidth is-small"
-          to="play-stories"
-          >Alt Stories</nuxt-link
-        >
-      </div>
-
-      <div class="columns is-multiline">
-        <div
-          v-for="item in items"
-          :key="item.link"
-          class="column is-flex is-4 p-0"
-        >
-          <card :article="item" />
-        </div>
-      </div>
-
-      <!-- <nav
-      class="pagination is-centered"
-      role="navigation"
-      aria-label="pagination"
-    >
-      <a class="pagination-previous">Previous</a>
-      <a class="pagination-next">Next page</a>
-    </nav> -->
+  <v-container>
+    <v-app-bar app dense elevate-on-scroll>
+      <v-app-bar-title> Rasam </v-app-bar-title>
+    </v-app-bar>
+    <div class="block mb-4">
+      <!-- <search-input></search-input> -->
+      <story-timeline :stories="stories"></story-timeline>
     </div>
-  </main>
+
+    <v-row>
+      <v-col
+        v-for="item in items"
+        :key="item.link"
+        class="pa-0"
+        cols="12"
+        sm="4"
+      >
+        <card :article="item" />
+      </v-col>
+    </v-row>
+    <v-bottom-sheet v-model="sheet" inset>
+      <template #activator="{ on, attrs }">
+        <v-fab-transition>
+          <v-btn
+            color="primary"
+            dark
+            fixed
+            bottom
+            fab
+            right
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </template>
+      <v-sheet class="text-right">
+        <v-btn class="mt-3" text color="grey" @click="sheet = !sheet">
+          <v-icon>mdi-close</v-icon>
+          close
+        </v-btn>
+        <div class="px-3">
+          <feed-input></feed-input>
+        </div>
+      </v-sheet>
+    </v-bottom-sheet>
+  </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
+  data() {
+    return {
+      sheet: false,
+    }
+  },
   async fetch() {
-    await this.$store.dispatch('feeds/fetchStories')
+    await this.$store.dispatch('stories/fetchAll')
     await this.$store.dispatch('feeds/fetchAll')
   },
+
   computed: {
+    ...mapGetters({
+      items: 'feeds/items/paginatedList',
+      pages: 'feeds/items/pages',
+    }),
     ...mapState({
-      items: ({ feeds: { items } }) => items.list,
-      stories: ({ feeds }) => feeds.stories,
+      stories: ({ stories }) => stories.list,
+    }),
+  },
+  mounted() {
+    window.addEventListener('scroll', this.onScroll, { passive: true })
+  },
+  methods: {
+    onScroll() {
+      const body = document.body
+      const html = document.documentElement
+      const height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      )
+
+      const position = window.outerHeight + document.documentElement.scrollTop
+
+      if (height - position < window.outerHeight + 100) {
+        console.log('Next Page')
+        this.nextPage()
+      }
+    },
+    ...mapActions({
+      nextPage: 'feeds/items/nextPage',
     }),
   },
 }

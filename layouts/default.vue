@@ -1,7 +1,33 @@
 <template>
-  <div>
-    <Nuxt />
-  </div>
+  <v-app>
+    <v-main>
+      <Nuxt />
+    </v-main>
+  </v-app>
 </template>
 
-<style></style>
+<style>
+html {
+  --lh: 1.4rem;
+  line-height: var(--lh);
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.single-line-only {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.double-line-only {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

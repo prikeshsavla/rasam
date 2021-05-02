@@ -1,13 +1,15 @@
 <template>
-  <div id="app" :style="getMargin()">
-    <story
-      v-for="(story, index) in stories"
-      :key="index"
-      ref="stories"
-      :slides="story.items"
-      :story="story"
-      :index="index"
-    />
+  <div>
+    <div id="app" :style="getMargin()">
+      <story
+        v-for="(story, index) in stories"
+        :key="index"
+        ref="stories"
+        :slides="story.items"
+        :story="story"
+        :index="index"
+      />
+    </div>
   </div>
 </template>
 
@@ -22,29 +24,15 @@ export default {
       currentStoryIndex: ({ stories }) => stories.currentStoryIndex,
     }),
   },
+
   async mounted() {
-    // await this.$store.dispatch("feeds/fetchAll");
     await this.$store.dispatch('stories/fetchAll')
-
-    // EventBus.$on("NEXT_STORY", () => {
-    //   if (this.currentStoryIndex < this.stories.length - 1) {
-    //     this.$refs.stories[this.currentStoryIndex].deactivate();
-    //     this.currentStoryIndex++;
-    //     this.$refs.stories[this.currentStoryIndex].activate();
-    //   }
-    // });
-
-    // EventBus.$on("PREVIOUS_STORY", () => {
-    //   if (this.currentStoryIndex > 0) {
-    //     this.$refs.stories[this.currentStoryIndex].deactivate();
-    //     this.currentStoryIndex--;
-    //     this.$refs.stories[this.currentStoryIndex].activate();
-    //   } else {
-    //     console.log("PREVIOUS_STORY");
-    //     this.$refs.stories[this.currentStoryIndex].resetSlide();
-    //   }
-    // });
-
+    if (this.$route && this.$route.query && this.$route.query.id) {
+      await this.$store.dispatch(
+        'stories/setStoryIndexById',
+        this.$route.query.id
+      )
+    }
     // Disable mouse wheel
     this.$el.addEventListener('wheel', (event) => {
       event.preventDefault()

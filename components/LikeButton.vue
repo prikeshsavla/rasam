@@ -1,12 +1,8 @@
 <template>
-  <button
-    type="button"
-    class="button is-small"
-    :class="buttonClass"
-    @click="like"
-  >
-    ♥
-  </button>
+  <v-btn icon @click="like">
+    <v-icon v-if="!!likedAt" color="yellow darken-3"> mdi-star </v-icon>
+    <v-icon v-else color="grey lighten-1"> mdi-star-outline </v-icon>
+  </v-btn>
 </template>
 
 <script>
@@ -30,8 +26,8 @@ export default {
     },
   },
   methods: {
-    like() {
-      this.$store.dispatch('feeds/items/likeItem', {
+    async like() {
+      await this.$store.dispatch('feeds/items/likeItem', {
         link: this.link,
         liked: !this.liked,
       })

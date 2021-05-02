@@ -1,15 +1,16 @@
 {
   "name": "rasam",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
+    "lint": "yarn lint:js"
   },
   "dependencies": {
-    "@nuxtjs/bulma": "^1.3.0",
     "@nuxtjs/pwa": "^3.3.5",
     "animejs": "^3.2.1",
     "core-js": "^3.9.1",
@@ -18,10 +19,20 @@
     "hammerjs": "^2.0.8",
     "lodash-es": "^4.17.21",
     "nuxt": "^2.15.3",
-    "rss-finder": "^2.1.5",
     "rss-parser": "^3.12.0",
-    "timeago.js": "^4.0.2",
-    "zuck.js": "^1.6.0"
+    "timeago.js": "^4.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@mdi/font": "^5.9.55",
+    "@nuxtjs/eslint-config": "^6.0.0",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/vuetify": "^1.11.3",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.7.0",
+    "prettier": "^2.2.1"
+  }
 }

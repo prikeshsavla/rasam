@@ -89,8 +89,7 @@ export default {
 
       const position = window.outerHeight + document.documentElement.scrollTop
 
-      if (height - position < window.outerHeight + 100) {
-        console.log('Next Page')
+      if (height - position < window.outerHeight + 300) {
         this.nextPage()
       }
     },

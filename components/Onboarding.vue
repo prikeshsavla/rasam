@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto fill-height">
+  <v-card class="mx-auto fill-height" flat>
     <v-window v-model="step" :touchless="true" class="fill-height">
       <v-window-item :value="1">
         <v-carousel
@@ -152,7 +152,7 @@ export default {
         setTimeout(() => {
           // this.step = 2
           this.completedMessage = null
-           this.$emit('completedOnboarding')
+          this.$emit('completedOnboarding')
         }, 5000)
       }
     },

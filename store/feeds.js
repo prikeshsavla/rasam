@@ -9,18 +9,19 @@ const CORS_PROXY =
 export const state = () => ({
   list: [],
   stories: [],
+  suggested: [],
 })
 
 export const getters = {}
 
 export const actions = {
-  async addFeed({ commit, dispatch }, { url }) {
+  async addFeed({ dispatch }, { url }) {
     const parser = new Parser()
     const requestFeedUrl = url.replace(/\/$/, '')
 
     const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
     if (error) {
-      alert(error)
+      console.log(error)
       return false
     }
     const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
@@ -32,12 +33,33 @@ export const actions = {
     await db.items.bulkPut(items)
 
     await dispatch('commitAll')
-
-    alert(`${items.length} articles of ${feed.title} added`)
-    return true
+    return { noOfItems: items.length, feedTitle: feed.title }
+  },
+  async fetchSuggested({ commit }) {
+    const suggestedFeeds = await db.suggested_feeds.toArray()
+    commit('setSuggestedFeeds', suggestedFeeds)
+    return suggestedFeeds
+  },
+  async addFromSuggested({ dispatch, state }, selectedSuggestionIndices) {
+    const links = selectedSuggestionIndices.map(
+      (suggestionIndex) => state.suggested[suggestionIndex].link
+    )
+    const addFeedResponse = await Promise.all(
+      links.map((link) => dispatch('addFeed', { url: link }))
+    )
+    // const feedNames = addFeedResponse.map((response) => response.feedTitle)
+    // const totalItems = addFeedResponse
+    //   .map((response) => response.noOfItems)
+    //   .reduce((a, b) => a + b)
+    // alert(
+    //   `Completed. Added total ${totalItems} articles from ${feedNames.join(
+    //     ', '
+    //   )}`
+    // )
+    return addFeedResponse
   },
 
-  async fetchAll({ commit, dispatch, state }) {
+  async fetchAll({ dispatch, state }) {
     dispatch('commitAll')
     const parser = new Parser()
     const feedPromises = state.list.map(({ feedUrl }) => {
@@ -53,7 +75,7 @@ export const actions = {
 
       return state.list
     } catch (message) {
-      alert(message)
+      console.log(message)
     }
   },
   async commitAll({ commit, dispatch }) {
@@ -66,6 +88,9 @@ export const actions = {
 export const mutations = {
   setFeeds(state, { feeds }) {
     state.list = feeds
+  },
+  setSuggestedFeeds(state, suggestedFeeds) {
+    state.suggested = suggestedFeeds
   },
 }
 

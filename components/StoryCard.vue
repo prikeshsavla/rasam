@@ -1,16 +1,16 @@
 <template>
   <v-container>
-    <small class="mb-1">{{ article.feedTitle }}</small>
-    <h2 class="mt-1">
+    <small class="mb-1 single-line-only">{{ article.feedTitle }}</small>
+    <div class="title mt-2 mb-1">
       <nuxt-link
         :to="`article/${encrypt(article.link)}`"
-        class="text-decoration-none black--text"
+        class="is-clipped text-decoration-none double-line-only black--text"
       >
         <strong>{{ article.title }}</strong>
       </nuxt-link>
-    </h2>
+    </div>
 
-    <div>
+    <div class="mb-2 line-clamp">
       {{ article.contentSnippet }}
     </div>
 
@@ -18,10 +18,6 @@
       <span class="grey--text">{{ author }}</span>
       ~<time-ago class="grey--text" :date="article.isoDate"></time-ago>
     </small>
-    <div class="text-center mt-3">
-      ^^^ <br />
-      Open
-    </div>
   </v-container>
 </template>
 

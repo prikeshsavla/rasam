@@ -1,3 +1,9 @@
+## [0.8.0] - Add Vuetify
+
+- Add Onboarding
+- Add suggested Blogs to subscribe
+- Share original link to outside
+
 ## [0.7.0] - Add Vuetify
 
 - Remove ZuckJs for stories

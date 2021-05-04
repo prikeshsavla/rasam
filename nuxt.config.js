@@ -74,8 +74,7 @@ export default {
       themes: {
         light: {
           primary: 'E37C43', // #E53935
-          secondary: colors.red.lighten4, // #FFCDD2
-          accent: colors.indigo.base, // #3F51B5
+          secondary: 'F0EFE8', // #FFCDD2
         },
       },
     },

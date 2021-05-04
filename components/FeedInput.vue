@@ -23,8 +23,12 @@ export default {
   methods: {
     async addFeed() {
       this.isLoading = true
-      if (await this.$store.dispatch('feeds/addFeed', { url: this.feedURL })) {
+      const result = await this.$store.dispatch('feeds/addFeed', {
+        url: this.feedURL,
+      })
+      if (result) {
         this.feedURL = ''
+        alert(`${result.noOfItems} articles of ${result.feedTitle} added`)
       }
       this.isLoading = false
     },

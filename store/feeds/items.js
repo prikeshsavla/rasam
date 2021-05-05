@@ -4,7 +4,8 @@ export const state = () => ({
   list: [],
   item: {},
   page: 1,
-  show: 20,
+  show: 15,
+  query: '',
 })
 
 export const getters = {
@@ -30,12 +31,29 @@ export const actions = {
     commit('setItems', items)
     return state.list
   },
+  async fetchAllForFeed({ commit }, id) {
+    const items = await db.items
+      .where('feedLink')
+      .equals(decrypt(id))
+      .reverse()
+      .sortBy('isoDate')
+
+    // using parallel queries:
+    await Promise.all(
+      items.map(async (item) => {
+        const likesItem = await db.likes.get({ link: item.link })
+        item.likedAt = likesItem ? likesItem.likedAt : null
+      })
+    )
+    commit('setItems', items)
+    return state.list
+  },
   async getItemByID({ commit, state }, id) {
     const item = await db.items.get({ link: decrypt(id) })
     await commit('setItem', item)
     return item
   },
-  async likeItem({ commit, dispatch }, { link, liked }) {
+  async likeItem({ commit }, { link, liked }) {
     const likesItem = { link, likedAt: liked ? new Date() : null }
     if (liked) {
       const likesItem = { link, likedAt: new Date() }
@@ -43,12 +61,8 @@ export const actions = {
     } else {
       await db.likes.where('link').equals(link).delete()
     }
-    await dispatch('fetchAll')
-    await commit(
-      'setItem',
-      Object.assign({}, state.item, { likedAt: likesItem.likedAt })
-    )
-    return state.item
+    await commit('setItemLikedAt', likesItem)
+    return likesItem
   },
   nextPage({ state, commit }) {
     const maxPages = Math.ceil(state.list.length / state.show)
@@ -64,6 +78,15 @@ export const mutations = {
   },
   setItem(state, item) {
     state.item = item
+  },
+  setItemLikedAt(state, { link, likedAt }) {
+    if (state.list.length > 0) {
+      const itemIndex = state.list
+        .map((listItem) => listItem.link)
+        .indexOf(link)
+      state.list[itemIndex].likedAt = likedAt
+    }
+    state.item.likedAt = likedAt
   },
   setPage(state, page) {
     state.page = page || 1

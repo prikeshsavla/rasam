@@ -1,14 +1,16 @@
 <template>
   <v-text-field
-    v-model="searchText"
+    v-model="searchQuery"
     :loading="isLoading"
-    placeholder="🔍 Search Articles / Blogs"
-    outlined
-    dense
-    rounded
-    label="Search"
-    class="ma-0 pa-0"
+    solo
+    clearable
+    @click:prepend-inner="search"
   >
+    <template v-slot:label>
+      <v-icon style="vertical-align: middle"> mdi-magnify </v-icon> Search
+    </template>
+
+    <v-icon slot="prepend-inner-icon" color="primary"> mdi-plus </v-icon>
   </v-text-field>
   <!-- https://www.smashingmagazine.com/feed/ -->
 </template>
@@ -17,16 +19,14 @@
 export default {
   data() {
     return {
-      searchText: '',
+      searchQuery: '',
       isLoading: false,
     }
   },
   methods: {
-    addFeed() {
+    search() {
       this.isLoading = true
-      // if (await this.$store.dispatch('feeds/addFeed', { url: this.feedURL })) {
-      //   this.feedURL = ''
-      // }
+      console.log('searching')
       this.isLoading = false
     },
   },

@@ -10,12 +10,13 @@ export default {
   data() {
     return {
       currentComponent: '',
+      value: 'recent',
     }
   },
   async fetch() {
     const onboarded = await this.$store.dispatch('settings/get', 'onboarded')
     if (onboarded) {
-      this.currentComponent = 'feed'
+      this.currentComponent = 'home-screen'
     } else {
       this.currentComponent = 'onboarding'
     }
@@ -26,7 +27,7 @@ export default {
         name: 'onboarded',
         value: true,
       })
-      this.currentComponent = 'feed'
+      this.currentComponent = 'home-screen'
     },
   },
 }

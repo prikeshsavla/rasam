@@ -1,7 +1,8 @@
-## [0.8.0] - Add Vuetify
+## [0.8.0] - Add
 
 - Add Onboarding
 - Add suggested Blogs to subscribe
+- Add search feeds
 - Share original link to outside
 
 ## [0.7.0] - Add Vuetify

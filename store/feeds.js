@@ -1,6 +1,7 @@
 import db from '@/plugins/db'
 import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
+import { decrypt } from '~/plugins/crypt'
 const CORS_PROXY =
   window.location.hostname === 'localhost'
     ? 'https://api.allorigins.win/raw?url='
@@ -8,6 +9,7 @@ const CORS_PROXY =
 
 export const state = () => ({
   list: [],
+  item: {},
   stories: [],
   suggested: [],
 })
@@ -21,7 +23,7 @@ export const actions = {
 
     const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
     if (error) {
-      console.log(error)
+      console.error(error)
       return false
     }
     const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
@@ -58,36 +60,45 @@ export const actions = {
     // )
     return addFeedResponse
   },
-
-  async fetchAll({ dispatch, state }) {
+  async fetchFeedsOnly({ commit }) {
+    commit('setFeeds', { feeds: await db.feeds.toArray() })
+  },
+  fetchAll({ dispatch, state }) {
     dispatch('commitAll')
-    const parser = new Parser()
-    const feedPromises = state.list.map(({ feedUrl }) => {
-      return parser.parseURL(CORS_PROXY + feedUrl)
-    })
-    try {
-      const resolvedfeeds = await Promise.all(feedPromises)
-      const { items, feeds } = parseFeeds(resolvedfeeds)
 
-      await db.feeds.bulkPut(feeds)
-      await db.items.bulkPut(items)
-      dispatch('commitAll')
+    try {
+      // const parser = new Parser()
+      // const feedPromises = state.list.map(({ feedUrl }) => {
+      //   return parser.parseURL(CORS_PROXY + feedUrl)
+      // })
+      // const resolvedfeeds = await Promise.all(feedPromises)
+      // const { items, feeds } = parseFeeds(resolvedfeeds)
+
+      // await db.feeds.bulkPut(feeds)
+      // await db.items.bulkPut(items)
+      // dispatch('commitAll')
 
       return state.list
     } catch (message) {
-      console.log(message)
+      // console.error(message)
     }
   },
-  async commitAll({ commit, dispatch }) {
+  commitAll({ dispatch }) {
     dispatch('items/fetchAll')
-    commit('setFeeds', { feeds: await db.feeds.toArray() })
+    dispatch('fetchFeedsOnly')
     dispatch('stories/fetchAll', null, { root: true })
+  },
+  async getFeed({ commit }, id) {
+    commit('setFeed', await db.feeds.get({ link: decrypt(id) }))
   },
 }
 
 export const mutations = {
   setFeeds(state, { feeds }) {
     state.list = feeds
+  },
+  setFeed(state, feed) {
+    state.item = feed
   },
   setSuggestedFeeds(state, suggestedFeeds) {
     state.suggested = suggestedFeeds

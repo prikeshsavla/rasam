@@ -18,6 +18,7 @@ import debounce from 'lodash/debounce'
 import { mapState } from 'vuex'
 
 export default {
+  layout: 'full',
   computed: {
     ...mapState({
       stories: ({ stories }) => stories.list,

@@ -59,6 +59,14 @@ export default {
     manifest: {
       lang: 'en',
       crossorigin: 'anonymous',
+      share_target: {
+        action: '/share',
+        params: {
+          title: 'title',
+          text: 'text',
+          url: 'url',
+        },
+      },
     },
   },
 

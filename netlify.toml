@@ -4,7 +4,13 @@
   status = 200
   force = true
 [[redirects]]
-  from = "//articles/*"
+  from = "/articles/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/feeds/*"
   to = "/index.html"
   status = 200
   force = true

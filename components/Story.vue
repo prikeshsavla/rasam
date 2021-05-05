@@ -136,7 +136,7 @@ export default {
       // console.log('SWIPE: swipeup')
 
       this.$router.push(
-        `//articles/${encrypt(this.slides[this.currentSlideIndex].link)}`
+        `/articles/${encrypt(this.slides[this.currentSlideIndex].link)}`
       )
     })
 

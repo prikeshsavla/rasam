@@ -35,7 +35,6 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import share from '@/plugins/share'
 
 export default {
-  layout: 'full',
   async asyncData({ store, params }) {
     await store.dispatch('feeds/getFeed', params.id)
     await store.dispatch('feeds/items/fetchAllForFeed', params.id)
@@ -79,55 +78,4 @@ export default {
 }
 </script>
 
-<style>
-.content {
-  overflow-wrap: anywhere;
-}
-.content * {
-  max-width: 100% !important;
-}
-/*
-
-.content blockquote {
-  padding: 1em;
-  background: #f5f5f5;
-  border-left: 3px grey solid;
-}
-.content hr {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-.content p {
-  margin-top: 0.5em;
-}
-.content img {
-  height: auto;
-  width: auto;
-}
-*/
-
-.content blockquote {
-  padding: 1em;
-  background: #f5f5f5;
-  border-left: 3px grey solid;
-}
-.content h1,
-.content h2,
-.content h3,
-.content h4,
-.content h5 {
-  margin-top: 1em;
-}
-
-figure {
-  margin-bottom: 1em;
-}
-img {
-  max-width: 100% !important;
-  display: block !important;
-  margin-bottom: 0.5em;
-}
-.v-application a.primary {
-  background-color: #fff !important;
-}
-</style>
+<style></style>

@@ -1,34 +1,22 @@
 <template>
-  <component
-    :is="currentComponent"
-    @completedOnboarding="completedOnboarding"
-  ></component>
+  <home-screen v-if="render" />
+  
 </template>
 
 <script>
 export default {
   data() {
     return {
-      currentComponent: '',
-      value: 'recent',
+      render: false,
     }
   },
   async fetch() {
     const onboarded = await this.$store.dispatch('settings/get', 'onboarded')
-    if (onboarded) {
-      this.currentComponent = 'home-screen'
+    if (!onboarded) {
+      this.$router.push('/onboarding')
     } else {
-      this.currentComponent = 'onboarding'
+      this.render = true
     }
-  },
-  methods: {
-    async completedOnboarding() {
-      await this.$store.dispatch('settings/set', {
-        name: 'onboarded',
-        value: true,
-      })
-      this.currentComponent = 'home-screen'
-    },
   },
 }
 </script>

@@ -2,11 +2,10 @@
   <v-container
     class="text-center d-flex align-center justify-center fill-height flex-column"
   >
-    {{ $route.query }}
     <p class="mb-5">
       {{ $route.query.title || $route.query.text }}
       <br />
-      {{ $route.query.url }}
+      {{ $route.query.url || $route.query.text }}
     </p>
 
     <div class="mb-5 primary--text" v-html="completedMessage"></div>

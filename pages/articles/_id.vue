@@ -40,7 +40,6 @@ import share from '@/plugins/share'
 import { encrypt } from '~/plugins/crypt'
 
 export default {
-  layout: 'full',
   async asyncData({ store, params: { id } }) {
     await store.dispatch('feeds/items/getItemByID', id)
   },

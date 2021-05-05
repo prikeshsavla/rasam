@@ -77,7 +77,7 @@ export default {
   },
 
   vuetify: {
-    defaultAssets: false,
+    defaultAssets: true,
     theme: {
       themes: {
         light: {

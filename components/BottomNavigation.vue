@@ -34,4 +34,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.v-bottom-navigation .v-btn:not(.v-btn--round).v-size--default {
+  height: 56px;
+}
+</style>

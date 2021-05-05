@@ -35,6 +35,7 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import share from '@/plugins/share'
 
 export default {
+  layout: 'full',
   async asyncData({ store, params }) {
     await store.dispatch('feeds/getFeed', params.id)
     await store.dispatch('feeds/items/fetchAllForFeed', params.id)

@@ -24,20 +24,29 @@ export default {
     return { completedMessage: null }
   },
   async mounted() {
-    if (this.$route?.query?.url) {
-      const response = await this.$store.dispatch('feeds/addFeed', {
-        url: this.$route?.query?.url,
-      })
-      if (response) {
-        this.completedMessage = `Added total <strong>${response.noOfItems}</strong> articles from <strong> ${response.feedTitle} </strong>`
+    if (this.$route?.query?.url || this.$route?.query?.text) {
+      try {
+        const url = new URL(this.$route?.query?.url || this.$route?.query?.text)
+        const response = await this.$store.dispatch('feeds/addFeed', {
+          url: url.toString(),
+        })
+        if (response) {
+          this.completedMessage = `Added total <strong>${response.noOfItems}</strong> articles from <strong> ${response.feedTitle} </strong>`
 
-        this.completedMessage += `<br><br> Showing Feed now...`
+          this.completedMessage += `<br><br> Showing Feed now...`
 
-        setTimeout(() => {
-          this.completedMessage = null
-          this.$router.push('/')
-        }, 3000)
+          setTimeout(() => {
+            this.completedMessage = null
+            this.$router.push('/')
+          }, 3000)
+        }
+      } catch (error) {
+        alert('Cannot find URL to add to feed. Going back home')
+        this.$router.push('/')
       }
+    } else {
+      alert('Cannot find URL to add to feed. Going back home')
+      this.$router.push('/')
     }
   },
 }

@@ -61,6 +61,7 @@ export default {
       crossorigin: 'anonymous',
       share_target: {
         action: '/share',
+        method: 'GET',
         params: {
           title: 'title',
           text: 'text',

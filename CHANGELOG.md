@@ -4,6 +4,7 @@
 - Add suggested Blogs to subscribe
 - Add search feeds
 - Share original link to outside
+- Accept share of link to add as feed
 
 ## [0.7.0] - Add Vuetify
 

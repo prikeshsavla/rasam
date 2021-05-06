@@ -1,4 +1,6 @@
-# rasam
+# Rasam
+
+A Privacy focused and Offline enabled Feed Reader PWA with Nuxt, Nuxt PWA, Dexie
 
 ## Build Setup
 
@@ -19,7 +21,6 @@ $ yarn generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-
 ### Roadmap
 
 - [x] Display Feed like Twitter cards
@@ -27,6 +28,5 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Open Article on tap
 - [x] Favorite a article
 - [x] Dispay Feed like stories
-- [x] Zuckjs for stories https://github.com/ramon82/zuck.js/
-- [ ] Add Pagination for items
-- [ ] Add Trianglify https://github.com/qrohlf/trianglify#quickstart (Optional)
+- [x] Added Inifinte Scroll Paginations
+- [x] Added Search with [Fuze.js](https://github.com/krisk/Fuse)

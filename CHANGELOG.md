@@ -1,9 +1,10 @@
-## [0.8.0] - Add
+## [0.8.0] - Add Search, Obboarding and Sharing Support
 
 - Add Onboarding
 - Add suggested Blogs to subscribe
 - Add search feeds
 - Share original link to outside
+- Accept share of link to add as feed
 
 ## [0.7.0] - Add Vuetify
 

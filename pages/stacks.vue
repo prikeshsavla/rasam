@@ -3,10 +3,22 @@
     <v-app-bar app dense elevate-on-scroll>
       <v-app-bar-title> Stacks </v-app-bar-title>
     </v-app-bar>
-    <!-- <search-input /> -->
+    <keep-alive>
+      <search-input @search="search" />
+    </keep-alive>
+    <v-fade-transition>
+      <div v-if="searchResults.length > 0">
+        <small>{{ searchResults.length }} Results found.</small>
 
-    <feed-list :feeds="feeds" />
+        <article-list
+          class="mt-6"
+          :items="searchResults"
+          :show-loader="false"
+        />
+      </div>
 
+      <feed-list v-else :feeds="feeds" class="mt-6" />
+    </v-fade-transition>
     <v-fab-transition>
       <v-btn
         color="primary"
@@ -28,7 +40,7 @@
           close
         </v-btn>
         <div class="px-3">
-          <feed-input></feed-input>
+          <add-feed></add-feed>
         </div>
       </v-sheet>
     </v-bottom-sheet>
@@ -36,7 +48,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -48,9 +60,20 @@ export default {
     ...mapState({
       feeds: ({ feeds }) => feeds.list,
     }),
+    ...mapGetters({
+      searchResults: 'feeds/items/searchResults',
+    }),
   },
+
   mounted() {
     this.$store.dispatch('feeds/fetchFeedsOnly')
+    this.$store.dispatch('feeds/items/fetchAll')
+  },
+  methods: {
+    search(input) {
+      console.log('search:' + input)
+      this.$store.commit('feeds/items/setQuery', { query: input })
+    },
   },
 }
 </script>

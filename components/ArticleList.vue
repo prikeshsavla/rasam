@@ -1,23 +1,28 @@
 <template>
   <div>
-    <v-row>
-      <template v-if="items.length === 0">
-        <v-col v-for="n in 21" :key="n" class="pa-0" cols="12" sm="4">
-          <v-sheet outlined class="pa-3">
-            <v-skeleton-loader type="list-item-three-line"></v-skeleton-loader>
-          </v-sheet>
+    <v-fade-transition>
+      <v-row>
+        <template v-if="items.length === 0 && showLoader">
+          <v-col v-for="n in 21" :key="n" class="pa-0" cols="12" sm="4">
+            <v-sheet outlined class="pa-3">
+              <v-skeleton-loader
+                type="list-item-three-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+        </template>
+
+        <v-col
+          v-for="item in items"
+          :key="item.link"
+          class="pa-0"
+          cols="12"
+          sm="4"
+        >
+          <article-card :article="item" />
         </v-col>
-      </template>
-      <v-col
-        v-for="item in items"
-        :key="item.link"
-        class="pa-0"
-        cols="12"
-        sm="4"
-      >
-        <article-card :article="item" />
-      </v-col>
-    </v-row>
+      </v-row>
+    </v-fade-transition>
   </div>
 </template>
 
@@ -26,6 +31,10 @@ export default {
   props: {
     items: {
       type: Array,
+      required: true,
+    },
+    showLoader: {
+      type: Boolean,
       required: true,
     },
   },

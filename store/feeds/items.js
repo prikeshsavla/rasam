@@ -1,5 +1,7 @@
 import db from '@/plugins/db'
 import { decrypt } from '@/plugins/crypt'
+import Fuse from 'fuse.js'
+
 export const state = () => ({
   list: [],
   item: {},
@@ -11,6 +13,22 @@ export const state = () => ({
 export const getters = {
   paginatedList(state) {
     return state.list.slice(0, state.page * state.show)
+  },
+  searchResults(state) {
+    // 2. Set up the Fuse instance
+    const fuse = new Fuse(state.list, {
+      keys: [
+        'title',
+        'content',
+        'contentSnippet',
+        'link',
+        'author',
+        'feedTitle',
+        'isoDate',
+      ],
+    })
+    const searchResults = fuse.search(state.query, {})
+    return searchResults.map(({ item }) => item)
   },
   pages(state) {
     return Math.ceil(state.list.length / state.show)
@@ -90,5 +108,8 @@ export const mutations = {
   },
   setPage(state, page) {
     state.page = page || 1
+  },
+  setQuery(state, { query }) {
+    state.query = query || ''
   },
 }

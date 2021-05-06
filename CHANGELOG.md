@@ -1,4 +1,4 @@
-## [0.8.0] - Add
+## [0.8.0] - Add Search, Obboarding and Sharing Support
 
 - Add Onboarding
 - Add suggested Blogs to subscribe

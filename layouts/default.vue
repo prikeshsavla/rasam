@@ -3,9 +3,16 @@
     <v-main>
       <Nuxt />
     </v-main>
+    <bottom-navigation />
   </v-app>
 </template>
-
+<script>
+import BottomNavigation from '~/components/BottomNavigation.vue'
+export default {
+  components: { BottomNavigation },
+  data: () => ({ value: 'recent' }),
+}
+</script>
 <style>
 html {
   --lh: 1.4rem;

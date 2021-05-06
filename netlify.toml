@@ -4,10 +4,23 @@
   status = 200
   force = true
 [[redirects]]
-  from = "/article/*"
+  from = "/articles/*"
   to = "/index.html"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/feeds/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/stories/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
 
 [[headers]]
   for = "/cors-proxy/*"

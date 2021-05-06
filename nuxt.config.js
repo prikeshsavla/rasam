@@ -59,6 +59,15 @@ export default {
     manifest: {
       lang: 'en',
       crossorigin: 'anonymous',
+      share_target: {
+        action: '/share',
+        method: 'GET',
+        params: {
+          title: 'title',
+          text: 'text',
+          url: 'url',
+        },
+      },
     },
   },
 
@@ -69,7 +78,7 @@ export default {
   },
 
   vuetify: {
-    defaultAssets: false,
+    defaultAssets: true,
     theme: {
       themes: {
         light: {

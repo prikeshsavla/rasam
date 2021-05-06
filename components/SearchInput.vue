@@ -1,33 +1,41 @@
 <template>
   <v-text-field
-    v-model="searchText"
-    :loading="isLoading"
-    placeholder="🔍 Search Articles / Blogs"
-    outlined
-    dense
-    rounded
-    label="Search"
-    class="ma-0 pa-0"
+    hide-details
+    solo
+    clearable
+    @click:clear="search('')"
+    @input="search"
   >
+    <template #label>
+      <v-icon style="vertical-align: middle"> mdi-magnify </v-icon> Search for
+      articles
+    </template>
   </v-text-field>
   <!-- https://www.smashingmagazine.com/feed/ -->
 </template>
 
 <script>
 export default {
+  props: {
+    delay: {
+      type: Number,
+      default: 500,
+    },
+  },
   data() {
     return {
-      searchText: '',
-      isLoading: false,
+      debounced: null,
     }
   },
   methods: {
-    addFeed() {
-      this.isLoading = true
-      // if (await this.$store.dispatch('feeds/addFeed', { url: this.feedURL })) {
-      //   this.feedURL = ''
-      // }
-      this.isLoading = false
+    search(input) {
+      if (this.debounced) {
+        clearTimeout(this.debounced)
+      }
+      this.debounced = setTimeout(() => {
+        this.$emit('search', input || '')
+        console.log('hello')
+      }, this.delay)
     },
   },
 }

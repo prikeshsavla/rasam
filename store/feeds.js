@@ -1,6 +1,7 @@
 import db from '@/plugins/db'
 import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
+import { decrypt } from '~/plugins/crypt'
 const CORS_PROXY =
   window.location.hostname === 'localhost'
     ? 'https://api.allorigins.win/raw?url='
@@ -8,19 +9,21 @@ const CORS_PROXY =
 
 export const state = () => ({
   list: [],
+  item: {},
   stories: [],
+  suggested: [],
 })
 
 export const getters = {}
 
 export const actions = {
-  async addFeed({ commit, dispatch }, { url }) {
+  async addFeed({ dispatch }, { url }) {
     const parser = new Parser()
     const requestFeedUrl = url.replace(/\/$/, '')
 
     const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
     if (error) {
-      alert(error)
+      console.error(error)
       return false
     }
     const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
@@ -32,40 +35,73 @@ export const actions = {
     await db.items.bulkPut(items)
 
     await dispatch('commitAll')
-
-    alert(`${items.length} articles of ${feed.title} added`)
-    return true
+    return { noOfItems: items.length, feedTitle: feed.title }
   },
-
-  async fetchAll({ commit, dispatch, state }) {
+  async fetchSuggested({ commit }) {
+    const suggestedFeeds = await db.suggested_feeds.toArray()
+    commit('setSuggestedFeeds', suggestedFeeds)
+    return suggestedFeeds
+  },
+  async addFromSuggested({ dispatch, state }, selectedSuggestionIndices) {
+    const links = selectedSuggestionIndices.map(
+      (suggestionIndex) => state.suggested[suggestionIndex].link
+    )
+    const addFeedResponse = await Promise.all(
+      links.map((link) => dispatch('addFeed', { url: link }))
+    )
+    // const feedNames = addFeedResponse.map((response) => response.feedTitle)
+    // const totalItems = addFeedResponse
+    //   .map((response) => response.noOfItems)
+    //   .reduce((a, b) => a + b)
+    // alert(
+    //   `Completed. Added total ${totalItems} articles from ${feedNames.join(
+    //     ', '
+    //   )}`
+    // )
+    return addFeedResponse
+  },
+  async fetchFeedsOnly({ commit }) {
+    commit('setFeeds', { feeds: await db.feeds.toArray() })
+  },
+  fetchAll({ dispatch, state }) {
     dispatch('commitAll')
-    const parser = new Parser()
-    const feedPromises = state.list.map(({ feedUrl }) => {
-      return parser.parseURL(CORS_PROXY + feedUrl)
-    })
-    try {
-      const resolvedfeeds = await Promise.all(feedPromises)
-      const { items, feeds } = parseFeeds(resolvedfeeds)
 
-      await db.feeds.bulkPut(feeds)
-      await db.items.bulkPut(items)
-      dispatch('commitAll')
+    try {
+      // const parser = new Parser()
+      // const feedPromises = state.list.map(({ feedUrl }) => {
+      //   return parser.parseURL(CORS_PROXY + feedUrl)
+      // })
+      // const resolvedfeeds = await Promise.all(feedPromises)
+      // const { items, feeds } = parseFeeds(resolvedfeeds)
+
+      // await db.feeds.bulkPut(feeds)
+      // await db.items.bulkPut(items)
+      // dispatch('commitAll')
 
       return state.list
     } catch (message) {
-      alert(message)
+      // console.error(message)
     }
   },
-  async commitAll({ commit, dispatch }) {
+  commitAll({ dispatch }) {
     dispatch('items/fetchAll')
-    commit('setFeeds', { feeds: await db.feeds.toArray() })
+    dispatch('fetchFeedsOnly')
     dispatch('stories/fetchAll', null, { root: true })
+  },
+  async getFeed({ commit }, id) {
+    commit('setFeed', await db.feeds.get({ link: decrypt(id) }))
   },
 }
 
 export const mutations = {
   setFeeds(state, { feeds }) {
     state.list = feeds
+  },
+  setFeed(state, feed) {
+    state.item = feed
+  },
+  setSuggestedFeeds(state, suggestedFeeds) {
+    state.suggested = suggestedFeeds
   },
 }
 

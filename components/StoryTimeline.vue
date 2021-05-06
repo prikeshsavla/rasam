@@ -3,7 +3,7 @@
     <v-slide-group>
       <v-slide-item v-for="story in stories" :key="story.title">
         <div class="mr-2">
-          <nuxt-link :to="'/play-stories?id=' + story.id">
+          <nuxt-link :to="'/stories?id=' + story.id">
             <v-avatar size="81" color="primary">
               <v-avatar size="77" color="white">
                 <v-avatar size="72">

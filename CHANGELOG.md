@@ -1,3 +1,9 @@
+## [0.9.0] - Add Search, Obboarding and Sharing Support
+
+- Change UI for Article Cards and Article Page
+- Refactor code
+- Performance fixes
+
 ## [0.8.0] - Add Search, Obboarding and Sharing Support
 
 - Add Onboarding

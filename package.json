@@ -1,7 +1,13 @@
 {
   "name": "rasam",
-  "version": "0.8.0",
+  "description": "A PWA which reads rss feeds with privacy and offline access in mind.",
+  "version": "0.9.0",
   "private": true,
+  "author": {
+    "email": "dev.prikesh@gmail.com",
+    "name": "Prikesh Savla",
+    "url": "https://prikeshsavla.com"
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",

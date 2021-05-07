@@ -1,37 +1,52 @@
 <template>
-  <v-container>
-    <v-app-bar app dense flat>
-      <v-app-bar-nav-icon @click="back">
-        <v-icon>mdi-chevron-left</v-icon>
+  <div class="primary">
+    <v-app-bar dense flat class="transparent" prominent>
+      <v-app-bar-nav-icon class="white--text" @click="back">
+        <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
-      <v-app-bar-title @click="back">Back</v-app-bar-title>
-    </v-app-bar>
-    <small>
-      <nuxt-link :to="`/feeds/${encrypt(article.feedLink)}`">
-        {{ article.feedTitle }}
-      </nuxt-link>
-    </small>
-    <h1 class="headline mt-3">
-      <a class="text-decoration-none" :href="article.link">
-        {{ article.title }}</a
-      >
-    </h1>
-
-    <div class="d-flex align-center">
-      <small>
-        {{ author }} ~<time-ago
-          class="has-text-grey"
-          :date="article.isoDate"
-        ></time-ago
-      ></small>
       <v-spacer></v-spacer>
-      <v-btn icon @click="shareArticle">
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
-    </div>
-    <hr />
-    <div class="content mt-4" v-html="content"></div>
-  </v-container>
+      <div>
+        <v-btn icon class="white--text" @click="shareArticle">
+          <v-icon>mdi-share-variant</v-icon>
+        </v-btn>
+      </div>
+    </v-app-bar>
+    <v-sheet class="transparent pb-5 px-5 d-flex justify-end flex-column">
+      <div class="white--text">
+        <small>
+          <nuxt-link
+            class="white--text text-decoration-none"
+            :to="`/feeds/${encrypt(article.feedLink)}`"
+          >
+            {{ article.feedTitle }}
+          </nuxt-link>
+        </small>
+        <h1 class="headline mt-3" v-if="article.link">
+          <a class="text-decoration-none white--text" :href="article.link">
+            {{ article.title }}
+          </a>
+        </h1>
+        <h1 class="headline mt-3" v-else>
+          {{ article.title }}
+        </h1>
+        <div class="d-flex align-center">
+          <small>
+            {{ author }} ~<time-ago
+              class="has-text-grey"
+              :date="article.isoDate"
+            ></time-ago
+          ></small>
+          <!-- <v-spacer></v-spacer>
+          <v-btn icon class="white--text" @click="shareArticle">
+            <v-icon>mdi-share-variant</v-icon>
+          </v-btn> -->
+        </div>
+      </div>
+    </v-sheet>
+    <v-sheet class="px-5 py-3 rounded-t-xl" elevation="24">
+      <div class="content mt-4" v-html="content"></div>
+    </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -72,7 +87,7 @@ export default {
     shareArticle() {
       share({
         title: this.article.title,
-        text: this.article.title,
+        text: this.article.link,
         url: this.article.link,
       })
     },
@@ -86,6 +101,9 @@ export default {
 }
 .content * {
   max-width: 100% !important;
+}
+.v-application a {
+  color: black;
 }
 /*
 

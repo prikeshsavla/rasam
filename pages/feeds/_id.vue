@@ -2,31 +2,28 @@
   <v-container>
     <v-app-bar app dense flat>
       <v-app-bar-nav-icon @click="back">
-        <v-icon>mdi-chevron-left</v-icon>
+        <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
-    <div class="mb-3">
-      <h1 class="title mt-2 mb-1">
-        <a :href="feed.link">
-          <strong>{{ feed.title }}</strong>
-        </a>
+    <div class="mb-3" v-if="feed">
+      <h1 class="title mb-1">
+        <strong>{{ feed.title }}</strong>
       </h1>
 
-      <p class="mb-2">
-        {{ feed.description }}
-      </p>
+      <div class="mb-1" v-html="feed.description"></div>
       <div class="d-flex align-center">
-        <small>
+        <a :href="feed.link" class="single-line-only">
           {{ feedLink }}
-        </small>
+        </a>
         <v-spacer></v-spacer>
         <v-btn icon @click="shareFeed">
           <v-icon>mdi-share-variant</v-icon>
         </v-btn>
       </div>
     </div>
+    <v-divider />
 
-    <article-list class="mt-5" :items="items" @nextPage="nextPage" />
+    <article-list class="mt-3" :items="items" @nextPage="nextPage" />
   </v-container>
 </template>
 
@@ -35,9 +32,9 @@ import { mapGetters, mapState, mapActions } from 'vuex'
 import share from '@/plugins/share'
 
 export default {
-  async asyncData({ store, params }) {
-    await store.dispatch('feeds/getFeed', params.id)
-    await store.dispatch('feeds/items/fetchAllForFeed', params.id)
+  async asyncData({ store, params: { id } }) {
+    await store.dispatch('feeds/getFeed', id)
+    await store.dispatch('feeds/items/fetchAll', id)
   },
   computed: {
     feedLink() {

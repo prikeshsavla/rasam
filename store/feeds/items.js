@@ -4,10 +4,12 @@ import Fuse from 'fuse.js'
 
 export const state = () => ({
   list: [],
-  item: {},
+  totalItems: 0,
+  item: null,
   page: 1,
   show: 15,
   query: '',
+  feedId: null,
 })
 
 export const getters = {
@@ -22,6 +24,7 @@ export const getters = {
         'content',
         'contentSnippet',
         'link',
+        'guid',
         'author',
         'feedTitle',
         'isoDate',
@@ -31,62 +34,73 @@ export const getters = {
     return searchResults.map(({ item }) => item)
   },
   pages(state) {
-    return Math.ceil(state.list.length / state.show)
+    return Math.ceil(state.totalItems / state.show)
   },
 }
 
 export const actions = {
-  async fetchAll({ commit }) {
-    const items = await db.items.orderBy('isoDate').reverse().toArray()
+  async fetchAll({ state, commit }, feedId) {
+    let items = []
+    let totalItems = 0
 
-    // using parallel queries:
+    if (feedId) {
+      await commit('setFeedId', feedId)
+    }
+
+    if (state.feedId) {
+      items = await db.items
+        .where('feedLink')
+        .equals(decrypt(state.feedId))
+        .reverse()
+        .sortBy('isoDate')
+
+      totalItems = await db.items
+        .where('feedLink')
+        .equals(decrypt(state.feedId))
+        .count()
+    } else {
+      items = await db.items.orderBy('isoDate').reverse().toArray()
+
+      totalItems = await db.items.count()
+    }
+
     await Promise.all(
       items.map(async (item) => {
-        const likesItem = await db.likes.get({ link: item.link })
+        const likesItem = await db.likes.get({ guid: item.guid })
         item.likedAt = likesItem ? likesItem.likedAt : null
+        return item
       })
     )
     commit('setItems', items)
+    commit('setTotalItems', totalItems)
     return state.list
   },
-  async fetchAllForFeed({ commit }, id) {
-    const items = await db.items
-      .where('feedLink')
-      .equals(decrypt(id))
-      .reverse()
-      .sortBy('isoDate')
 
-    // using parallel queries:
-    await Promise.all(
-      items.map(async (item) => {
-        const likesItem = await db.likes.get({ link: item.link })
-        item.likedAt = likesItem ? likesItem.likedAt : null
-      })
-    )
-    commit('setItems', items)
-    return state.list
-  },
   async getItemByID({ commit, state }, id) {
-    const item = await db.items.get({ link: decrypt(id) })
+    const item = await db.items.get({ guid: decrypt(id) })
     await commit('setItem', item)
     return item
   },
-  async likeItem({ commit }, { link, liked }) {
-    const likesItem = { link, likedAt: liked ? new Date() : null }
+  async likeItem({ commit }, { guid, liked }) {
+    let likesItem = { guid, likedAt: liked ? new Date() : null }
+
     if (liked) {
-      const likesItem = { link, likedAt: new Date() }
+      likesItem = { guid, likedAt: liked ? new Date() : null }
       await db.likes.put(likesItem)
     } else {
-      await db.likes.where('link').equals(link).delete()
+      await db.likes.where('guid').equals(guid).delete()
     }
+
     await commit('setItemLikedAt', likesItem)
     return likesItem
   },
-  nextPage({ state, commit }) {
-    const maxPages = Math.ceil(state.list.length / state.show)
+  async nextPage({ state, dispatch, commit }) {
+    const maxPages = Math.ceil(state.totalItems / state.show)
+
     if (state.page + 1 <= maxPages) {
-      commit('setPage', state.page + 1)
+      await commit('incrementPageBy', 1)
     }
+    await dispatch('fetchAll')
   },
 }
 
@@ -97,19 +111,31 @@ export const mutations = {
   setItem(state, item) {
     state.item = item
   },
-  setItemLikedAt(state, { link, likedAt }) {
+  setItemLikedAt(state, { guid, likedAt }) {
+    if (state.item) {
+      state.item.likedAt = likedAt
+    }
+
     if (state.list.length > 0) {
       const itemIndex = state.list
-        .map((listItem) => listItem.link)
-        .indexOf(link)
+        .map((listItem) => listItem.guid)
+        .indexOf(guid)
       state.list[itemIndex].likedAt = likedAt
     }
-    state.item.likedAt = likedAt
   },
   setPage(state, page) {
     state.page = page || 1
   },
+  incrementPageBy(state, incrementBy) {
+    state.page = state.page + incrementBy
+  },
   setQuery(state, { query }) {
     state.query = query || ''
+  },
+  setFeedId(state, feedId) {
+    state.feedId = feedId
+  },
+  setTotalItems(state, totalItems) {
+    state.totalItems = totalItems
   },
 }

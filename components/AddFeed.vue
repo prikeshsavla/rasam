@@ -29,6 +29,8 @@ export default {
       if (result) {
         this.feedURL = ''
         alert(`${result.noOfItems} articles of ${result.feedTitle} added`)
+      } else {
+        alert(`Cannot find feed for ${this.feedURL}`)
       }
       this.isLoading = false
     },

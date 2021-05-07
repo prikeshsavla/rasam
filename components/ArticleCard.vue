@@ -1,11 +1,11 @@
 <template>
-  <v-card class="py-1" outlined tile>
+  <v-card class="py-2 secondary" outlined shaped>
     <v-list-item three-line>
       <v-list-item-content>
         <small class="mb-1 single-line-only">{{ article.feedTitle }}</small>
         <v-list-item-title class="mt-2 mb-1">
           <nuxt-link
-            :to="`/articles/${encrypt(article.link)}`"
+            :to="`/articles/${encrypt(article.guid)}`"
             class="is-clipped text-decoration-none double-line-only black--text"
           >
             <strong>{{ article.title }}</strong>
@@ -27,7 +27,7 @@
           >~<time-ago class="grey--text" :date="article.isoDate"></time-ago
         ></v-list-item-action-text>
         <like-button
-          :link="article.link"
+          :guid="article.guid"
           :liked-at="article.likedAt"
         ></like-button>
       </v-list-item-action>

@@ -11,7 +11,7 @@
       <v-col
         v-for="feed in feeds"
         :key="feed.link"
-        class="pa-0"
+        class="pt-0"
         cols="12"
         sm="4"
       >

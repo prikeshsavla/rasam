@@ -3,7 +3,7 @@
     <small class="mb-1 single-line-only">{{ article.feedTitle }}</small>
     <div class="title mt-2 mb-1">
       <nuxt-link
-        :to="`/articles/${encrypt(article.link)}`"
+        :to="`/articles/${encrypt(article.guid)}`"
         class="is-clipped text-decoration-none double-line-only black--text"
       >
         <strong>{{ article.title }}</strong>

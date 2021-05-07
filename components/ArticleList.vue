@@ -3,8 +3,8 @@
     <v-fade-transition>
       <v-row>
         <template v-if="items.length === 0 && showLoader">
-          <v-col v-for="n in 21" :key="n" class="pa-0" cols="12" sm="4">
-            <v-sheet outlined class="pa-3">
+          <v-col v-for="n in 21" :key="n" class="pb-0" cols="12" sm="4">
+            <v-sheet outlined shaped class="pa-3 py-5">
               <v-skeleton-loader
                 type="list-item-three-line"
               ></v-skeleton-loader>
@@ -14,10 +14,10 @@
 
         <v-col
           v-for="item in items"
-          :key="item.link"
-          class="pa-0"
+          :key="item.guid"
+          class="pb-0"
           cols="12"
-          sm="4"
+          sm="3"
         >
           <article-card :article="item" />
         </v-col>
@@ -35,29 +35,40 @@ export default {
     },
     showLoader: {
       type: Boolean,
-      required: true,
+      default: true,
     },
+  },
+  data() {
+    return {
+      debounced: null,
+    }
   },
   mounted() {
     window.addEventListener('scroll', this.onScroll, { passive: true })
   },
   methods: {
     onScroll() {
-      const body = document.body
-      const html = document.documentElement
-      const height = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-      )
-
-      const position = window.outerHeight + document.documentElement.scrollTop
-
-      if (height - position < window.outerHeight + 300) {
-        this.$emit('nextPage')
+      if (this.debounced) {
+        clearTimeout(this.debounced)
       }
+
+      this.debounced = setTimeout(() => {
+        const body = document.body
+        const html = document.documentElement
+        const height = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        )
+
+        const position = window.outerHeight + document.documentElement.scrollTop
+
+        if (height - position < window.outerHeight + 300) {
+          this.$emit('nextPage')
+        }
+      }, 100)
     },
   },
 }

@@ -1,8 +1,8 @@
 <template>
-  <v-card class="py-1" outlined tile>
+  <v-card class="secondary py-2" outlined rounded>
     <v-list-item three-line>
       <v-list-item-content>
-        <v-list-item-title class="mt-2 mb-1">
+        <v-list-item-title class="mb-1">
           <nuxt-link
             :to="`/feeds/${encrypt(feed.link)}`"
             class="is-clipped text-decoration-none double-line-only black--text"
@@ -11,8 +11,7 @@
           </nuxt-link>
         </v-list-item-title>
 
-        <v-list-item-subtitle class="mb-2">
-          {{ feed.description }}
+        <v-list-item-subtitle class="mb-2" v-html="feed.description">
         </v-list-item-subtitle>
         <small>
           {{ feedLink }}

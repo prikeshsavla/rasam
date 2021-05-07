@@ -4,8 +4,8 @@ import getFeeds from 'get-feeds'
 import { decrypt } from '~/plugins/crypt'
 const CORS_PROXY =
   window.location.hostname === 'localhost'
-    ? process.env.CORS_PROXY
-    : process.env.CORS_PROXY
+    ? 'https://api.allorigins.win/raw?url='
+    : 'https://api.allorigins.win/raw?url='
 
 export const state = () => ({
   list: [],

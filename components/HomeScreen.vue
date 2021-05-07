@@ -7,7 +7,7 @@
       <!-- <search-input></search-input> -->
       <story-timeline :stories="stories" />
     </div>
-
+    <v-divider class="mb-4" />
     <article-list :items="items" @nextPage="nextPage" />
   </v-container>
 </template>

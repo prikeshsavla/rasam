@@ -1,6 +1,5 @@
 <template>
   <home-screen v-if="render" />
-  
 </template>
 
 <script>

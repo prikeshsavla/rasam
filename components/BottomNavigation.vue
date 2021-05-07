@@ -1,21 +1,15 @@
 <template>
   <v-bottom-navigation v-model="value" app grow fixed color="primary">
-    <v-btn value="index" nuxt to="/">
+    <v-btn icon value="index" nuxt to="/" max-width="none">
       <!-- <span>Home</span> -->
 
       <v-icon>mdi-home-variant-outline</v-icon>
     </v-btn>
 
-    <v-btn value="stacks" nuxt to="/stacks">
+    <v-btn icon value="stacks" nuxt to="/stacks" max-width="none">
       <!-- <span>Stacks</span> -->
 
       <v-icon>mdi-view-grid-outline</v-icon>
-    </v-btn>
-
-    <v-btn value="bookmarks" nuxt to="/bookmarks">
-      <!-- <span>Bookmarks</span> -->
-
-      <v-icon>mdi-bookmark-outline</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>

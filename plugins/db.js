@@ -1,10 +1,10 @@
 import Dexie from 'dexie'
 
 const db = new Dexie('rasam')
-db.version(3).stores({
-  items: `link, title, content, isoDate, author, feedLink`,
+db.version(4).stores({
+  items: `guid, link, title, content, isoDate, author, feedLink`,
   feeds: `link, title, lastBuildDate, feedUrl`,
-  likes: `link, likedAt`,
+  likes: `guid, likedAt`,
   suggested_feeds: `link, title, contentSnipped, image`,
   settings: 'name, value',
 })

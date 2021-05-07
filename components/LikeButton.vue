@@ -8,7 +8,7 @@
 <script>
 export default {
   props: {
-    link: {
+    guid: {
       type: String,
       required: true,
     },
@@ -28,7 +28,7 @@ export default {
   methods: {
     async like() {
       await this.$store.dispatch('feeds/items/likeItem', {
-        link: this.link,
+        guid: this.guid,
         liked: !this.liked,
       })
     },

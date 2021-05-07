@@ -4,12 +4,12 @@ import getFeeds from 'get-feeds'
 import { decrypt } from '~/plugins/crypt'
 const CORS_PROXY =
   window.location.hostname === 'localhost'
-    ? 'https://api.allorigins.win/raw?url='
-    : 'https://api.allorigins.win/raw?url='
+    ? process.env.CORS_PROXY
+    : process.env.CORS_PROXY
 
 export const state = () => ({
   list: [],
-  item: {},
+  item: null,
   stories: [],
   suggested: [],
 })
@@ -18,24 +18,33 @@ export const getters = {}
 
 export const actions = {
   async addFeed({ dispatch }, { url }) {
-    const parser = new Parser()
-    const requestFeedUrl = url.replace(/\/$/, '')
+    try {
+      const parser = new Parser()
+      const requestFeedUrl = url.replace(/\/$/, '')
 
-    const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
-    if (error) {
+      const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
+      if (error) {
+        console.error(error)
+        return false
+      }
+
+      const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
+      const items = feed.items.map((item) =>
+        Object.assign(item, { feedTitle: feed.title, feedLink: feed.link })
+      )
+
+      const feedWithoutItems = Object.assign({}, feed, { items: [] })
+
+      await db.feeds.put(feedWithoutItems)
+
+      await db.items.bulkPut(items)
+
+      await dispatch('saveFeedsAndItems')
+      return { noOfItems: items.length, feedTitle: feed.title }
+    } catch (error) {
       console.error(error)
       return false
     }
-    const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
-    const items = feed.items.map((item) =>
-      Object.assign(item, { feedTitle: feed.title, feedLink: feed.link })
-    )
-    const feedWithoutItems = Object.assign({}, feed, { items: [] })
-    await db.feeds.put(feedWithoutItems)
-    await db.items.bulkPut(items)
-
-    await dispatch('commitAll')
-    return { noOfItems: items.length, feedTitle: feed.title }
   },
   async fetchSuggested({ commit }) {
     const suggestedFeeds = await db.suggested_feeds.toArray()
@@ -49,41 +58,32 @@ export const actions = {
     const addFeedResponse = await Promise.all(
       links.map((link) => dispatch('addFeed', { url: link }))
     )
-    // const feedNames = addFeedResponse.map((response) => response.feedTitle)
-    // const totalItems = addFeedResponse
-    //   .map((response) => response.noOfItems)
-    //   .reduce((a, b) => a + b)
-    // alert(
-    //   `Completed. Added total ${totalItems} articles from ${feedNames.join(
-    //     ', '
-    //   )}`
-    // )
     return addFeedResponse
   },
   async fetchFeedsOnly({ commit }) {
     commit('setFeeds', { feeds: await db.feeds.toArray() })
   },
-  fetchAll({ dispatch, state }) {
-    dispatch('commitAll')
+  async fetchAll({ dispatch, state }) {
+    dispatch('saveFeedsAndItems')
 
     try {
-      // const parser = new Parser()
-      // const feedPromises = state.list.map(({ feedUrl }) => {
-      //   return parser.parseURL(CORS_PROXY + feedUrl)
-      // })
-      // const resolvedfeeds = await Promise.all(feedPromises)
-      // const { items, feeds } = parseFeeds(resolvedfeeds)
+      const parser = new Parser()
+      const feedPromises = state.list.map(({ feedUrl }) => {
+        return parser.parseURL(CORS_PROXY + feedUrl)
+      })
+      const resolvedfeeds = await Promise.all(feedPromises)
+      const { items, feeds } = parseFeeds(resolvedfeeds)
 
-      // await db.feeds.bulkPut(feeds)
-      // await db.items.bulkPut(items)
-      // dispatch('commitAll')
+      await db.feeds.bulkPut(feeds)
+      await db.items.bulkPut(items)
+      dispatch('saveFeedsAndItems')
 
       return state.list
     } catch (message) {
-      // console.error(message)
+      console.error(message)
     }
   },
-  commitAll({ dispatch }) {
+  saveFeedsAndItems({ dispatch }) {
     dispatch('items/fetchAll')
     dispatch('fetchFeedsOnly')
     dispatch('stories/fetchAll', null, { root: true })
@@ -132,7 +132,7 @@ function parseFeeds(feeds) {
   return { feeds: _feeds, items: _items }
 }
 
-async function findFeedFromURL(url, searchPrefix, callback) {
+async function findFeedFromURL(url, searchPrefix) {
   if (!isValidHttpUrl(url)) {
     return {
       error:
@@ -199,19 +199,12 @@ async function findFeedFromURL(url, searchPrefix, callback) {
   async function checkAll() {
     if (await isRss(feed)) {
       return feed
-    } else {
-      res = await checkTheDom(feed)
-      if (res) {
-        return res
-      } else {
-        res = await checkSuspects(feed)
-        if (res) {
-          return res
-        } else {
-          return false
-        }
-      }
     }
+    const urlInDOM = await checkTheDom(feed)
+    if (urlInDOM) {
+      return urlInDOM
+    }
+    return await checkSuspects(feed)
   }
 
   res = await checkAll()

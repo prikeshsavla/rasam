@@ -1,17 +1,17 @@
 <template>
   <v-container>
-    <v-app-bar app dense elevate-on-scroll>
-      <v-app-bar-title> Stacks </v-app-bar-title>
-    </v-app-bar>
+    <h1 class="mt-3">Stacks</h1>
+    <p>Substacks that are in your feed.</p>
+
     <keep-alive>
       <search-input @search="search" />
     </keep-alive>
     <v-fade-transition>
-      <div v-if="searchResults.length > 0">
+      <div class="mt-2" v-if="searchResults.length > 0">
         <small>{{ searchResults.length }} Results found.</small>
 
         <article-list
-          class="mt-6"
+          class="mt-3"
           :items="searchResults"
           :show-loader="false"
         />
@@ -65,9 +65,9 @@ export default {
     }),
   },
 
-  mounted() {
-    this.$store.dispatch('feeds/fetchFeedsOnly')
-    this.$store.dispatch('feeds/items/fetchAll')
+  async mounted() {
+    await this.$store.dispatch('feeds/fetchFeedsOnly')
+    await this.$store.dispatch('feeds/items/fetchAll')
   },
   methods: {
     search(input) {

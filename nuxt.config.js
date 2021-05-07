@@ -46,6 +46,7 @@ export default {
     // '@nuxtjs/eslint-module',
     // https://github.com/nuxt-community/vuetify-module
     '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -83,7 +84,7 @@ export default {
       themes: {
         light: {
           primary: 'E37C43', // #E53935
-          secondary: 'F0EFE8', // #FFCDD2
+          secondary: 'F3F4F6', // #FFCDD2
         },
       },
     },

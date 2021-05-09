@@ -23,7 +23,7 @@
     </div>
     <v-divider />
 
-    <article-list class="mt-3" :items="items" @nextPage="nextPage" />
+    <article-list class="mt-3 mb-5" :items="items" @nextPage="nextPage" />
   </v-container>
 </template>
 
@@ -34,15 +34,12 @@ import share from '@/plugins/share'
 export default {
   async asyncData({ store, params: { id } }) {
     await store.dispatch('feeds/getFeed', id)
-    await store.dispatch('feeds/items/fetchAll', id)
+    await store.dispatch('feeds/items/fetchAll', { feedId: id })
   },
   computed: {
     feedLink() {
       const url = new URL(this.feed.link)
-      return url.href
-        .replace('www.', '')
-        .replace(/http(s):\/\//, '')
-        .replace(/\/$/, '')
+      return url.hostname
     },
     ...mapGetters({
       items: 'feeds/items/paginatedList',
@@ -53,8 +50,12 @@ export default {
   },
   methods: {
     back() {
-      this.$router.back()
-      window.history.back()
+      // this.$router.back()
+      if (window.history.length > 1) {
+        window.history.back()
+      } else {
+        this.$router.push('/')
+      }
     },
 
     shareFeed() {

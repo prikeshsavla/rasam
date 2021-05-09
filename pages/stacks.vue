@@ -11,13 +11,13 @@
         <small>{{ searchResults.length }} Results found.</small>
 
         <article-list
-          class="mt-3"
+          class="mt-3 mb-5"
           :items="searchResults"
           :show-loader="false"
         />
       </div>
 
-      <feed-list v-else :feeds="feeds" class="mt-6" />
+      <feed-list v-else :feeds="feeds" class="mt-6 mb-5" />
     </v-fade-transition>
     <v-fab-transition>
       <v-btn
@@ -67,7 +67,7 @@ export default {
 
   async mounted() {
     await this.$store.dispatch('feeds/fetchFeedsOnly')
-    await this.$store.dispatch('feeds/items/fetchAll')
+    await this.$store.dispatch('feeds/items/fetchAll', {})
   },
   methods: {
     search(input) {

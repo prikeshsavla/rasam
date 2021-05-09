@@ -153,7 +153,7 @@ export default {
           // this.step = 2
           this.completedMessage = null
           this.$emit('completedOnboarding')
-        }, 5000)
+        }, 3000)
       }
     },
     ...mapActions({

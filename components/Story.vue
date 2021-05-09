@@ -1,5 +1,5 @@
 <template>
-  <div class="story">
+  <div class="story secondary">
     <div class="timeline">
       <div v-for="(slide, i) in slides" :key="i" class="slice">
         <div class="progress">&nbsp;</div>
@@ -8,6 +8,11 @@
     <div class="slide">
       <story-card :article="slides[currentSlideIndex]" />
     </div>
+    <div class="text-center pa-5">
+      <v-icon>mdi-arrow-up</v-icon> <v-icon>mdi-arrow-up</v-icon>
+      <v-icon>mdi-arrow-up</v-icon>
+    </div>
+    <v-fade-transition> </v-fade-transition>
   </div>
 </template>
 
@@ -70,7 +75,7 @@ export default {
     const $timeline = this.$el.getElementsByClassName('timeline')[0]
 
     // Add progress bars to the timeline animation group
-    this.slides.forEach((color, index) => {
+    this.slides.forEach((slide, index) => {
       this.timeline.add({
         targets: $timeline
           .getElementsByClassName('slice')

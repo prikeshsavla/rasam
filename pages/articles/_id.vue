@@ -1,51 +1,71 @@
 <template>
   <div class="primary">
-    <v-app-bar dense flat class="transparent" prominent>
+    <v-app-bar app dense flat class="primary" fixed>
       <v-app-bar-nav-icon class="white--text" @click="back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <div>
-        <v-btn icon class="white--text" @click="shareArticle">
-          <v-icon>mdi-share-variant</v-icon>
-        </v-btn>
-      </div>
+
+      <like-button color="white" :guid="article.guid" :liked-at="likedAt" />
+      <v-btn icon class="white--text" @click="shareArticle">
+        <v-icon>mdi-share-variant</v-icon>
+      </v-btn>
+      <v-btn v-if="article.link" :href="article.link" icon>
+        <v-icon color="white">mdi-open-in-new</v-icon>
+      </v-btn>
     </v-app-bar>
-    <v-sheet class="transparent pb-5 px-5 d-flex justify-end flex-column">
+    <v-sheet class="transparent pb-5 pt-10 px-5 d-flex justify-end flex-column">
       <div class="white--text">
-        <small>
+        <p>
           <nuxt-link
             class="white--text text-decoration-none"
             :to="`/feeds/${encrypt(article.feedLink)}`"
           >
             {{ article.feedTitle }}
           </nuxt-link>
-        </small>
-        <h1 class="headline mt-3" v-if="article.link">
-          <a class="text-decoration-none white--text" :href="article.link">
-            {{ article.title }}
-          </a>
-        </h1>
-        <h1 class="headline mt-3" v-else>
+        </p>
+        <h1 class="headline mb-3">
           {{ article.title }}
         </h1>
-        <div class="d-flex align-center">
-          <small>
-            {{ author }} ~<time-ago
-              class="has-text-grey"
-              :date="article.isoDate"
-            ></time-ago
-          ></small>
-          <!-- <v-spacer></v-spacer>
+
+        <small class="d-flex justify-space-between">
+          {{ author }}
+
+          <span>
+            ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
+          </span>
+        </small>
+        <!-- <v-spacer></v-spacer>
           <v-btn icon class="white--text" @click="shareArticle">
             <v-icon>mdi-share-variant</v-icon>
           </v-btn> -->
-        </div>
       </div>
     </v-sheet>
-    <v-sheet class="px-5 py-3 rounded-t-xl" elevation="24">
+    <v-sheet class="px-5 py-3 rounded-t-xl" min-height="90vh" elevation="24">
       <div class="content mt-4" v-html="content"></div>
+      <!-- <v-btn
+        color="primary"
+        text
+        block
+        class="mt-5"
+        v-if="article.link"
+        :href="article.link"
+        >Open in browser &nbsp; <v-icon>mdi-open-in-new</v-icon>
+      </v-btn> -->
     </v-sheet>
+
+    <v-bottom-navigation :value="bottom" app grow fixed color="primary">
+      <v-btn icon nuxt :to="`/feeds/${encrypt(article.feedLink)}`" color="grey">
+        <v-icon>mdi-book</v-icon>
+      </v-btn>
+      <like-button :guid="article.guid" :liked-at="likedAt" />
+      <v-btn icon @click="shareArticle">
+        <v-icon>mdi-share-variant</v-icon>
+      </v-btn>
+      <v-btn v-if="article.link" :href="article.link" icon>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </div>
 </template>
 
@@ -53,12 +73,27 @@
 import { mapState } from 'vuex'
 import share from '@/plugins/share'
 import { encrypt } from '~/plugins/crypt'
+import LikeButton from '~/components/LikeButton.vue'
 
 export default {
+  layout: 'full',
+  components: { LikeButton },
   async asyncData({ store, params: { id } }) {
     await store.dispatch('feeds/items/getItemByID', id)
   },
+  data() {
+    return {
+      bottom: 1,
+    }
+  },
   computed: {
+    likedAt() {
+      if (this.article.likedAt) {
+        return this.article.likedAt
+      } else {
+        return null
+      }
+    },
     feedLink() {
       const url = new URL(this.article.feedLink)
       return url.href
@@ -81,8 +116,12 @@ export default {
   methods: {
     encrypt,
     back() {
-      this.$router.back()
-      window.history.back()
+      // this.$router.back()
+      if (window.history.length > 1) {
+        window.history.back()
+      } else {
+        this.$router.push('/')
+      }
     },
     shareArticle() {
       share({
@@ -101,34 +140,6 @@ export default {
 }
 .content * {
   max-width: 100% !important;
-}
-.v-application a {
-  color: black;
-}
-/*
-
-.content blockquote {
-  padding: 1em;
-  background: #f5f5f5;
-  border-left: 3px grey solid;
-}
-.content hr {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-.content p {
-  margin-top: 0.5em;
-}
-.content img {
-  height: auto;
-  width: auto;
-}
-*/
-
-.content blockquote {
-  padding: 1em;
-  background: #f5f5f5;
-  border-left: 3px grey solid;
 }
 .content h1,
 .content h2,

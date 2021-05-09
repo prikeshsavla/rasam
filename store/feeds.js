@@ -11,7 +11,53 @@ export const state = () => ({
   list: [],
   item: null,
   stories: [],
-  suggested: [],
+  suggested: [
+    {
+      contentSnippet: `A journey to find new and inspiring open-source libraries with a touch of India's food, people and culture.`,
+      title: 'Open Pull Request',
+      link: 'https://openpullrequest.substack.com/',
+    },
+    {
+      contentSnippet: `Best known for the Hot 100 and Billboard 200, which list the most popular songs and albums each week in the industry. Offers industry news, events, podcasts, and music streaming.`,
+      title: 'Billboard',
+      link: 'https://www.billboard.com/',
+    },
+    {
+      contentSnippet: `High-end business journalism keeping readers up-to-date on economic news as well as interviews with top entrepreneurs. There’s also educated predictions, trend analyses, and tips on how to improve businesses.`,
+      title: 'Business Insider',
+      link: 'https://www.businessinsider.com/',
+    },
+    {
+      contentSnippet:
+        'Podcasts, interviews, videos, and photo galleries covering the latest entertainment news in Australia and around the world. Articles primarily cover celebrity lifestyle, focusing on health, beauty, fashion, as well as travel.',
+      title: 'TMZ',
+      link: 'https://www.tmz.com/',
+    },
+    {
+      contentSnippet:
+        'Find business news, webinars and events, book recommendations, and interviews with successful entrepreneurs. The site is updated daily and even has a magazine for longer-form pieces.',
+      title: 'Entrepreneur',
+      link: 'https://www.entrepreneur.com/',
+    },
+    {
+      contentSnippet:
+        'The Verge is an ambitious multimedia effort founded nine years ago to examine how technology will change life in the future for a massive mainstream audience.',
+      title: 'The Verge',
+      link: 'https://www.theverge.com/',
+    },
+    {
+      contentSnippet: `Standout voice in pop culture and music delivering top news across artists, albums, film, TV, and video. Online gig guide, shop, and radio access covering the latest.`,
+      title: 'NME',
+      link: 'https://www.nme.com/',
+    },
+
+    {
+      contentSnippet:
+        'With an editorial focus on innovation in technology, world changing ideas, leadership, creativity, and design, FastCompany gives readers both economic news and advice on how to better grow their business.',
+      title: 'Fast Company',
+      link: 'https://www.fastcompany.com/',
+    },
+  ],
 })
 
 export const getters = {}
@@ -30,11 +76,18 @@ export const actions = {
 
       const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
       const items = feed.items.map((item) =>
-        Object.assign(item, { feedTitle: feed.title, feedLink: feed.link })
+        Object.assign(item, {
+          feedTitle: feed.title,
+          feedLink: feed.link,
+          guid: item.guid || item.id || item.link,
+        })
       )
 
-      const feedWithoutItems = Object.assign({}, feed, { items: [] })
-
+      const feedWithoutItems = Object.assign({}, feed, {
+        items: [],
+        feedUrl: discoveredUrl,
+      })
+      // debugger
       await db.feeds.put(feedWithoutItems)
 
       await db.items.bulkPut(items)
@@ -46,10 +99,10 @@ export const actions = {
       return false
     }
   },
-  async fetchSuggested({ commit }) {
-    const suggestedFeeds = await db.suggested_feeds.toArray()
-    commit('setSuggestedFeeds', suggestedFeeds)
-    return suggestedFeeds
+  fetchSuggested({ state }) {
+    // const suggestedFeeds = await db.suggested_feeds.toArray()
+    // commit('setSuggestedFeeds', suggestedFeeds)
+    return state.suggested
   },
   async addFromSuggested({ dispatch, state }, selectedSuggestionIndices) {
     const links = selectedSuggestionIndices.map(
@@ -84,7 +137,7 @@ export const actions = {
     }
   },
   saveFeedsAndItems({ dispatch }) {
-    dispatch('items/fetchAll')
+    dispatch('items/fetchAll', {})
     dispatch('fetchFeedsOnly')
     dispatch('stories/fetchAll', null, { root: true })
   },

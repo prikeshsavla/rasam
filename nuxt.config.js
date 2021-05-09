@@ -85,6 +85,7 @@ export default {
         light: {
           primary: 'E37C43', // #E53935
           secondary: 'F3F4F6', // #FFCDD2
+          accent: 'F0EFE8', // #FFCDD2
         },
       },
     },

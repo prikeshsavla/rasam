@@ -9,7 +9,13 @@
     <v-btn icon value="stacks" nuxt to="/stacks" max-width="none">
       <!-- <span>Stacks</span> -->
 
-      <v-icon>mdi-view-grid-outline</v-icon>
+      <v-icon>mdi-book-multiple</v-icon>
+    </v-btn>
+
+    <v-btn icon value="favorites" nuxt to="/favorites" max-width="none">
+      <!-- <span>Stacks</span> -->
+
+      <v-icon>mdi-heart-multiple</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>

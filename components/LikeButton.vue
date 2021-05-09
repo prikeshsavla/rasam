@@ -1,7 +1,7 @@
 <template>
   <v-btn icon @click="like">
-    <v-icon v-if="!!likedAt" color="yellow darken-3"> mdi-star </v-icon>
-    <v-icon v-else color="grey lighten-1"> mdi-star-outline </v-icon>
+    <v-icon v-if="!!likedAt" :color="color"> mdi-heart </v-icon>
+    <v-icon v-else :color="color"> mdi-heart-outline </v-icon>
   </v-btn>
 </template>
 
@@ -15,6 +15,10 @@ export default {
     likedAt: {
       type: Date,
       default: null,
+    },
+    color: {
+      type: String,
+      default: 'primary',
     },
   },
   computed: {

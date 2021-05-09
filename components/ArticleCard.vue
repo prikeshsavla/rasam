@@ -1,5 +1,11 @@
 <template>
-  <v-card class="py-2 secondary" outlined shaped>
+  <v-card
+    class="py-2 secondary"
+    outlined
+    shaped
+    nuxt
+    :to="`/articles/${encrypt(article.guid)}`"
+  >
     <v-list-item three-line>
       <v-list-item-content>
         <small class="mb-1 single-line-only">{{ article.feedTitle }}</small>
@@ -16,21 +22,12 @@
           {{ article.contentSnippet }}
         </v-list-item-subtitle>
 
-        <small>
-          <span class="grey--text">{{ author }}</span>
-          ~<time-ago class="grey--text" :date="article.isoDate"></time-ago>
+        <small class="justify-space-between d-flex">
+          {{ author }}
+
+          <span>~<time-ago :date="article.isoDate"></time-ago></span>
         </small>
       </v-list-item-content>
-
-      <v-list-item-action class="align-center">
-        <v-list-item-action-text
-          >~<time-ago class="grey--text" :date="article.isoDate"></time-ago
-        ></v-list-item-action-text>
-        <like-button
-          :guid="article.guid"
-          :liked-at="article.likedAt"
-        ></like-button>
-      </v-list-item-action>
     </v-list-item>
   </v-card>
 </template>

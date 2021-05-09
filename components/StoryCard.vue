@@ -1,23 +1,21 @@
 <template>
   <v-container>
-    <small class="mb-1 single-line-only">{{ article.feedTitle }}</small>
-    <div class="title mt-2 mb-1">
-      <nuxt-link
-        :to="`/articles/${encrypt(article.guid)}`"
-        class="is-clipped text-decoration-none double-line-only black--text"
-      >
-        <strong>{{ article.title }}</strong>
-      </nuxt-link>
-    </div>
+    <v-card tile flat color="transparent">
+      <p class="mb-1">{{ article.feedTitle }}</p>
+      <h2 class="mt-2 mb-1">
+        {{ article.title }}
+      </h2>
 
-    <div class="mb-2 line-clamp">
-      {{ article.contentSnippet }}
-    </div>
+      <div class="mb-2 line-clamp">
+        {{ article.contentSnippet }}
+      </div>
 
-    <small>
-      <span class="grey--text">{{ author }}</span>
-      ~<time-ago class="grey--text" :date="article.isoDate"></time-ago>
-    </small>
+      <small class="justify-space-between d-flex">
+        {{ author }}
+
+        <span>~<time-ago :date="article.isoDate"></time-ago></span>
+      </small>
+    </v-card>
   </v-container>
 </template>
 

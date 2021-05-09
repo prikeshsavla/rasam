@@ -1,3 +1,8 @@
+## [0.10.0] - Add Favorites Page
+
+- Add Favorites
+- Add Stories UI
+
 ## [0.9.0] - Add Search, Obboarding and Sharing Support
 
 - Change UI for Article Cards and Article Page

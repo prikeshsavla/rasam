@@ -30,3 +30,9 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Dispay Feed like stories
 - [x] Added Inifinte Scroll Paginations
 - [x] Added Search with [Fuze.js](https://github.com/krisk/Fuse)
+
+#### Known Issues
+
+- Broken Suggestions Feeds
+- Feeds with empty content
+- needs better article page content styles

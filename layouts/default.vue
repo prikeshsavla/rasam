@@ -37,4 +37,7 @@ html {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.v-application .content a {
+  color: black !important;
+}
 </style>

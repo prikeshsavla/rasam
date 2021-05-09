@@ -7,9 +7,10 @@ export const state = () => ({
   totalItems: 0,
   item: null,
   page: 1,
-  show: 15,
+  show: 30,
   query: '',
   feedId: null,
+  onlyLiked: false,
 })
 
 export const getters = {
@@ -39,14 +40,16 @@ export const getters = {
 }
 
 export const actions = {
-  async fetchAll({ state, commit }, feedId) {
+  async fetchAll({ state, commit }, { feedId, onlyLiked }) {
     let items = []
     let totalItems = 0
 
     if (feedId) {
       await commit('setFeedId', feedId)
     }
-
+    if (onlyLiked) {
+      await commit('setOnlyLiked', onlyLiked)
+    }
     if (state.feedId) {
       items = await db.items
         .where('feedLink')
@@ -58,6 +61,17 @@ export const actions = {
         .where('feedLink')
         .equals(decrypt(state.feedId))
         .count()
+    } else if (state.onlyLiked) {
+      items = await db.likes.toArray()
+      await Promise.all(
+        items.map(async (item) => {
+          const likedItem = await db.items.get({ guid: item.guid })
+          Object.assign(item, likedItem)
+          return item
+        })
+      )
+
+      totalItems = items.length
     } else {
       items = await db.items.orderBy('isoDate').reverse().toArray()
 
@@ -71,6 +85,7 @@ export const actions = {
         return item
       })
     )
+
     commit('setItems', items)
     commit('setTotalItems', totalItems)
     return state.list
@@ -78,6 +93,10 @@ export const actions = {
 
   async getItemByID({ commit, state }, id) {
     const item = await db.items.get({ guid: decrypt(id) })
+
+    const likesItem = await db.likes.get({ guid: item.guid })
+    item.likedAt = likesItem ? likesItem.likedAt : null
+
     await commit('setItem', item)
     return item
   },
@@ -94,13 +113,12 @@ export const actions = {
     await commit('setItemLikedAt', likesItem)
     return likesItem
   },
-  async nextPage({ state, dispatch, commit }) {
+  async nextPage({ state, commit }) {
     const maxPages = Math.ceil(state.totalItems / state.show)
 
     if (state.page + 1 <= maxPages) {
       await commit('incrementPageBy', 1)
     }
-    await dispatch('fetchAll')
   },
 }
 
@@ -112,10 +130,7 @@ export const mutations = {
     state.item = item
   },
   setItemLikedAt(state, { guid, likedAt }) {
-    if (state.item) {
-      state.item.likedAt = likedAt
-    }
-
+    state.item = Object.assign({}, state.item, { likedAt })
     if (state.list.length > 0) {
       const itemIndex = state.list
         .map((listItem) => listItem.guid)
@@ -134,6 +149,9 @@ export const mutations = {
   },
   setFeedId(state, feedId) {
     state.feedId = feedId
+  },
+  setOnlyLiked(state, onlyLiked) {
+    state.onlyLiked = onlyLiked
   },
   setTotalItems(state, totalItems) {
     state.totalItems = totalItems

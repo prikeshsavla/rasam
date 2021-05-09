@@ -1,14 +1,16 @@
 <template>
-  <v-card class="secondary py-2" outlined rounded>
+  <v-card
+    class="accent py-2"
+    outlined
+    rounded
+    nuxt
+    :to="`/feeds/${encrypt(feed.link)}`"
+  >
     <v-list-item three-line>
       <v-list-item-content>
         <v-list-item-title class="mb-1">
-          <nuxt-link
-            :to="`/feeds/${encrypt(feed.link)}`"
-            class="is-clipped text-decoration-none double-line-only black--text"
-          >
-            <strong>{{ feed.title }}</strong>
-          </nuxt-link>
+          <v-icon size="20">mdi-book</v-icon>
+          <strong>{{ feed.title }}</strong>
         </v-list-item-title>
 
         <v-list-item-subtitle class="mb-2" v-html="feed.description">

@@ -1,3 +1,8 @@
+## [1.0.0] - Fix Stories Swipe animations
+
+- Fix Stories Swipe animations
+- Fix issues with items list state on pages
+
 ## [0.10.0] - Add Favorites Page
 
 - Add Favorites

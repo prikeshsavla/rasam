@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async like() {
-      await this.$store.dispatch('feeds/items/likeItem', {
+      await this.$store.dispatch('items/likeItem', {
         guid: this.guid,
         liked: !this.liked,
       })

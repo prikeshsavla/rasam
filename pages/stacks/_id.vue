@@ -34,7 +34,7 @@ import share from '@/plugins/share'
 export default {
   async asyncData({ store, params: { id } }) {
     await store.dispatch('feeds/getFeed', id)
-    await store.dispatch('feeds/items/fetchAll', { feedId: id })
+    await store.dispatch('stackItems/fetchAll', { feedId: id })
   },
   computed: {
     feedLink() {
@@ -42,7 +42,7 @@ export default {
       return url.hostname
     },
     ...mapGetters({
-      items: 'feeds/items/paginatedList',
+      items: 'stackItems/paginatedList',
     }),
     ...mapState({
       feed: ({ feeds }) => feeds.item,
@@ -70,7 +70,7 @@ export default {
       })
     },
     ...mapActions({
-      nextPage: 'feeds/items/nextPage',
+      nextPage: 'stackItems/nextPage',
     }),
   },
 }

@@ -4,7 +4,7 @@
     outlined
     rounded
     nuxt
-    :to="`/feeds/${encrypt(feed.link)}`"
+    :to="`/stacks/${encrypt(feed.link)}`"
   >
     <v-list-item three-line>
       <v-list-item-content>

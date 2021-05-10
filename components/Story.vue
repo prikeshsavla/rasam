@@ -12,7 +12,6 @@
       <v-icon>mdi-arrow-up</v-icon> <v-icon>mdi-arrow-up</v-icon>
       <v-icon>mdi-arrow-up</v-icon>
     </div>
-    <v-fade-transition> </v-fade-transition>
   </div>
 </template>
 
@@ -150,17 +149,17 @@ export default {
       this.$router.push('/')
     })
 
-    this.hammer.on('swiperight', (event) => {
-      // console.log('SWIPE: swiperight')
+    // this.hammer.on('swiperight', (event) => {
+    //   console.log('SWIPE: swiperight')
 
-      this.previousStory()
-    })
+    //   this.previousStory()
+    // })
 
-    this.hammer.on('swipeleft', (event) => {
-      // console.log('SWIPE: swipeleft')
+    // this.hammer.on('swipeleft', (event) => {
+    //   console.log('SWIPE: swipeleft')
 
-      this.nextStory()
-    })
+    //   this.nextStory()
+    // })
 
     if (this.index === 0) {
       this.activate()

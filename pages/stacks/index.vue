@@ -61,18 +61,18 @@ export default {
       feeds: ({ feeds }) => feeds.list,
     }),
     ...mapGetters({
-      searchResults: 'feeds/items/searchResults',
+      searchResults: 'stackItems/searchResults',
     }),
   },
 
   async mounted() {
     await this.$store.dispatch('feeds/fetchFeedsOnly')
-    await this.$store.dispatch('feeds/items/fetchAll', {})
+    await this.$store.dispatch('stackItems/fetchAll', {})
   },
   methods: {
     search(input) {
       console.log('search:' + input)
-      this.$store.commit('feeds/items/setQuery', { query: input })
+      this.$store.commit('stackItems/setQuery', { query: input })
     },
   },
 }

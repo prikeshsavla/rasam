@@ -19,7 +19,7 @@
         <p>
           <nuxt-link
             class="white--text text-decoration-none"
-            :to="`/feeds/${encrypt(article.feedLink)}`"
+            :to="`/stacks/${encrypt(article.feedLink)}`"
           >
             {{ article.feedTitle }}
           </nuxt-link>
@@ -55,7 +55,12 @@
     </v-sheet>
 
     <v-bottom-navigation :value="bottom" app grow fixed color="primary">
-      <v-btn icon nuxt :to="`/feeds/${encrypt(article.feedLink)}`" color="grey">
+      <v-btn
+        icon
+        nuxt
+        :to="`/stacks/${encrypt(article.feedLink)}`"
+        color="grey"
+      >
         <v-icon>mdi-book</v-icon>
       </v-btn>
       <like-button :guid="article.guid" :liked-at="likedAt" />
@@ -79,7 +84,7 @@ export default {
   layout: 'full',
   components: { LikeButton },
   async asyncData({ store, params: { id } }) {
-    await store.dispatch('feeds/items/getItemByID', id)
+    await store.dispatch('items/getItemByID', id)
   },
   data() {
     return {
@@ -110,7 +115,7 @@ export default {
       )
     },
     ...mapState({
-      article: ({ feeds: { items } }) => items.item,
+      article: ({ items }) => items.item,
     }),
   },
   methods: {

@@ -46,12 +46,6 @@ export const state = () => ({
       link: 'https://www.theverge.com/',
     },
     {
-      contentSnippet: `Standout voice in pop culture and music delivering top news across artists, albums, film, TV, and video. Online gig guide, shop, and radio access covering the latest.`,
-      title: 'NME',
-      link: 'https://www.nme.com/',
-    },
-
-    {
       contentSnippet:
         'With an editorial focus on innovation in technology, world changing ideas, leadership, creativity, and design, FastCompany gives readers both economic news and advice on how to better grow their business.',
       title: 'Fast Company',
@@ -137,7 +131,7 @@ export const actions = {
     }
   },
   saveFeedsAndItems({ dispatch }) {
-    dispatch('items/fetchAll', {})
+    dispatch('items/fetchAll', {}, { root: true })
     dispatch('fetchFeedsOnly')
     dispatch('stories/fetchAll', null, { root: true })
   },

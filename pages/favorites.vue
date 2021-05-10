@@ -16,16 +16,16 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   async asyncData({ store }) {
-    await store.dispatch('feeds/items/fetchAll', { onlyLiked: true })
+    await store.dispatch('favorites/fetchAll', { onlyLiked: true })
   },
   computed: {
     ...mapGetters({
-      items: 'feeds/items/paginatedList',
+      items: 'favorites/paginatedList',
     }),
   },
   methods: {
     ...mapActions({
-      nextPage: 'feeds/items/nextPage',
+      nextPage: 'favorites/nextPage',
     }),
   },
 }

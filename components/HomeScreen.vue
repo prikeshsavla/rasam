@@ -28,7 +28,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      items: 'feeds/items/paginatedList',
+      items: 'items/paginatedList',
     }),
     ...mapState({
       stories: ({ stories }) => stories.list,
@@ -37,7 +37,7 @@ export default {
 
   methods: {
     ...mapActions({
-      nextPage: 'feeds/items/nextPage',
+      nextPage: 'items/nextPage',
     }),
   },
 }

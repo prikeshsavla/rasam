@@ -13,9 +13,29 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
+      { name: 'msapplication-TileColor', content: '#da532c' },
+      { name: 'theme-color', content: '#ffffff' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/apple-touch-icon.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon-32x32.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        href: '/favicon-16x16.png',
+      },
+
+      { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#e37c43' },
       {
         rel: 'stylesheet',
         href:
@@ -66,10 +86,22 @@ export default {
       },
     },
     meta: {
-      'author': 'Prikesh Savla',
-      'theme_color': '#E37C43',
-      'nativeUI': true
-    }
+      author: 'Prikesh Savla',
+      theme_color: '#ffffff',
+      icons: [
+        {
+          src: '/android-chrome-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: '/android-chrome-384x384.png',
+          sizes: '384x384',
+          type: 'image/png',
+        },
+      ],
+      background_color: '#ffffff',
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

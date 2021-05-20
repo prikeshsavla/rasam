@@ -67,10 +67,10 @@
 
                   <v-list-item-action>
                     <v-icon v-if="!active" color="grey lighten-1">
-                      mdi-bookmark
+                      mdi-book
                     </v-icon>
 
-                    <v-icon v-else color="primary "> mdi-bookmark </v-icon>
+                    <v-icon v-else color="primary "> mdi-book </v-icon>
                   </v-list-item-action>
                 </template>
               </v-list-item>

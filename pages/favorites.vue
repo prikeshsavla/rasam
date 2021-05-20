@@ -8,7 +8,12 @@
       <p>All you favorite articles are here!</p>
     </div>
     <v-divider />
-    <article-list class="mt-3 mb-5" :items="items" @nextPage="nextPage" />
+    <article-list
+      class="mt-3 mb-5"
+      :show-loader="false"
+      :items="items"
+      @nextPage="nextPage"
+    />
   </v-container>
 </template>
 

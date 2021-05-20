@@ -1,3 +1,8 @@
+## [1.0.3] - Fix Stories Swipe animations
+
+- Fix Incorrect icons and themes for PWA
+- Fix issues on Favorites page
+- 
 ## [1.0.0] - Fix Stories Swipe animations
 
 - Fix Stories Swipe animations

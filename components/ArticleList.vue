@@ -17,7 +17,7 @@
           :key="item.guid"
           class="pb-0"
           cols="12"
-          sm="3"
+          sm="4"
         >
           <article-card :article="item" />
         </v-col>

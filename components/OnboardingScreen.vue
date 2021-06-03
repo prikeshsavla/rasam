@@ -131,9 +131,7 @@ export default {
       items: ({ feeds }) => feeds.suggested,
     }),
   },
-  async created() {
-    await this.$store.dispatch('feeds/fetchSuggested')
-  },
+
   methods: {
     async saveSuggested() {
       this.step++

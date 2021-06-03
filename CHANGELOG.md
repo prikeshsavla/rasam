@@ -1,8 +1,13 @@
+## [1.0.4] - Fix Feeds loading issue
+
+- Fix Feeds loading issue
+- Update layouts and icons
+
 ## [1.0.3] - Fix Stories Swipe animations
 
 - Fix Incorrect icons and themes for PWA
 - Fix issues on Favorites page
-- 
+ 
 ## [1.0.0] - Fix Stories Swipe animations
 
 - Fix Stories Swipe animations

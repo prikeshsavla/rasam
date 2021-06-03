@@ -21,10 +21,6 @@ export default {
       sheet: false,
     }
   },
-  async fetch() {
-    await this.$store.dispatch('stories/fetchAll')
-    await this.$store.dispatch('feeds/fetchAll')
-  },
 
   computed: {
     ...mapGetters({
@@ -33,6 +29,10 @@ export default {
     ...mapState({
       stories: ({ stories }) => stories.list,
     }),
+  },
+  async mounted() {
+    await this.$store.dispatch('stories/fetchAll')
+    await this.$store.dispatch('feeds/fetchAll')
   },
 
   methods: {

@@ -93,11 +93,6 @@ export const actions = {
       return false
     }
   },
-  fetchSuggested({ state }) {
-    // const suggestedFeeds = await db.suggested_feeds.toArray()
-    // commit('setSuggestedFeeds', suggestedFeeds)
-    return state.suggested
-  },
   async addFromSuggested({ dispatch, state }, selectedSuggestionIndices) {
     const links = selectedSuggestionIndices.map(
       (suggestionIndex) => state.suggested[suggestionIndex].link
@@ -108,20 +103,19 @@ export const actions = {
     return addFeedResponse
   },
   async fetchFeedsOnly({ commit }) {
-    commit('setFeeds', { feeds: await db.feeds.toArray() })
+    await commit('setFeeds', { feeds: await db.feeds.toArray() })
   },
   async fetchAll({ dispatch, state }) {
-    dispatch('saveFeedsAndItems')
+    await dispatch('saveFeedsAndItems')
 
     try {
       const parser = new Parser()
       const feedPromises = state.list.map(({ feedUrl }) => {
         return parser.parseURL(CORS_PROXY + feedUrl)
       })
-      const resolvedfeeds = await Promise.all(feedPromises)
-      const { items, feeds } = parseFeeds(resolvedfeeds)
+      const resolvedFeeds = await Promise.all(feedPromises)
+      const { items } = parseFeeds(resolvedFeeds)
 
-      await db.feeds.bulkPut(feeds)
       await db.items.bulkPut(items)
       dispatch('saveFeedsAndItems')
 
@@ -130,9 +124,9 @@ export const actions = {
       console.error(message)
     }
   },
-  saveFeedsAndItems({ dispatch }) {
-    dispatch('items/fetchAll', {}, { root: true })
-    dispatch('fetchFeedsOnly')
+  async saveFeedsAndItems({ dispatch }) {
+    await dispatch('fetchFeedsOnly')
+    await dispatch('items/fetchAll', {}, { root: true })
     dispatch('stories/fetchAll', null, { root: true })
   },
   async getFeed({ commit }, id) {

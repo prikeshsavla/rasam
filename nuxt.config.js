@@ -1,4 +1,3 @@
-import colors from 'vuetify/lib/util/colors'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -8,11 +7,16 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'rasam',
+    title: 'Rasam - RSS Feed Reader',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'A Privacy focused and Offline enabled Feed Reader PWA with Nuxt, Nuxt PWA, Dexie',
+      },
       { name: 'msapplication-TileColor', content: '#da532c' },
       { name: 'theme-color', content: '#ffffff' },
     ],
@@ -38,8 +42,7 @@ export default {
       { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#e37c43' },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900',
+        href: 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900',
       },
     ],
   },

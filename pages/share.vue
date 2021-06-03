@@ -1,6 +1,13 @@
 <template>
   <v-container
-    class="text-center d-flex align-center justify-center fill-height flex-column"
+    class="
+      text-center
+      d-flex
+      align-center
+      justify-center
+      fill-height
+      flex-column
+    "
   >
     <p class="mb-5">
       {{ $route.query.title || $route.query.text }}

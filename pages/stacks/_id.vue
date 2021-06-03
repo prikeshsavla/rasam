@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
-    <div class="mb-3" v-if="feed">
+    <div v-if="feed" class="mb-3">
       <h1 class="title mb-1">
         <strong>{{ feed.title }}</strong>
       </h1>

@@ -81,8 +81,8 @@ import { encrypt } from '~/plugins/crypt'
 import LikeButton from '~/components/LikeButton.vue'
 
 export default {
-  layout: 'full',
   components: { LikeButton },
+  layout: 'full',
   async asyncData({ store, params: { id } }) {
     await store.dispatch('items/getItemByID', id)
   },

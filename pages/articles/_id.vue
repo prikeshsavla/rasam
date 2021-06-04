@@ -35,23 +35,10 @@
             ~<time-ago class="has-text-grey" :date="article.isoDate"></time-ago>
           </span>
         </small>
-        <!-- <v-spacer></v-spacer>
-          <v-btn icon class="white--text" @click="shareArticle">
-            <v-icon>mdi-share-variant</v-icon>
-          </v-btn> -->
       </div>
     </v-sheet>
     <v-sheet class="px-5 py-3 rounded-t-xl" min-height="90vh" elevation="24">
-      <div class="content mt-4" v-html="content"></div>
-      <!-- <v-btn
-        color="primary"
-        text
-        block
-        class="mt-5"
-        v-if="article.link"
-        :href="article.link"
-        >Open in browser &nbsp; <v-icon>mdi-open-in-new</v-icon>
-      </v-btn> -->
+      <div v-html-safe="content" class="content mt-4"></div>
     </v-sheet>
 
     <v-bottom-navigation :value="bottom" app grow fixed color="primary">
@@ -76,9 +63,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import Vue from 'vue'
 import share from '@/plugins/share'
+import VueSecureHTML from 'vue-html-secure'
 import { encrypt } from '~/plugins/crypt'
 import LikeButton from '~/components/LikeButton.vue'
+
+Vue.use(VueSecureHTML)
 
 export default {
   components: { LikeButton },
@@ -145,6 +136,7 @@ export default {
 }
 .content * {
   max-width: 100% !important;
+  white-space: pre-wrap;
 }
 .content h1,
 .content h2,

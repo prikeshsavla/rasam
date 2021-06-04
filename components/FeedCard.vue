@@ -36,8 +36,9 @@ export default {
     feedLink() {
       const url = new URL(this.feed.link)
       return url.href
-        .replace('www.', '')
         .replace(/http(s):\/\//, '')
+        .replace(/http:\/\//, '')
+        .replace('www.', '')
         .replace(/\/$/, '')
     },
   },
@@ -46,5 +47,3 @@ export default {
   },
 }
 </script>
-
-<style></style>

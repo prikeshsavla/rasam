@@ -34,7 +34,6 @@ export default {
       }
       this.debounced = setTimeout(() => {
         this.$emit('search', input || '')
-        console.log('hello')
       }, this.delay)
     },
   },

@@ -93,73 +93,7 @@ export default {
       })
     })
 
-    this.hammer = new Hammer.Manager(this.$el, {
-      recognizers: [
-        [Hammer.Swipe, { direction: Hammer.DIRECTION_ALL }],
-        [Hammer.Tap],
-        [Hammer.Press, { time: 1, threshold: 1000000 }],
-      ],
-    })
-
-    this.hammer.on('press', () => {
-      this.timeline.pause()
-      // console.log('press: press')
-    })
-
-    this.hammer.on('pressup tap', () => {
-      this.timeline.play()
-      // console.log('press: pressup tap')
-    })
-
-    // Tap on the side to navigate between slides
-    this.hammer.on('tap', (event) => {
-      // console.log('tap: tap')
-      // console.log('center.x', event.center.x)
-      // console.log('window.outerWidth', window.outerWidth)
-      // console.log('next?', event.center.x > window.outerWidth / 3)
-      if (event.center.x > window.outerWidth / 3) {
-        this.nextSlide()
-      } else {
-        this.previousSlide()
-      }
-    })
-
-    // // Handle swipe
-    // this.hammer.on("pan", (event) => {
-    /// /   console.log("pan: pan");
-    //   if (event.isFinal) {
-    //     if (event.deltaX < 0) {
-    //       this.nextStory();
-    //     } else if (event.deltaX > 0) {
-    //       this.previousStory();
-    //     }
-    //   }
-    // });
-
-    this.hammer.on('swipeup', (event) => {
-      // console.log('SWIPE: swipeup')
-
-      this.$router.push(
-        `/articles/${encrypt(this.slides[this.currentSlideIndex].guid)}`
-      )
-    })
-
-    this.hammer.on('swipedown', (event) => {
-      // console.log('SWIPE: swipedown')
-      this.$router.push('/')
-    })
-
-    // this.hammer.on('swiperight', (event) => {
-    //   console.log('SWIPE: swiperight')
-
-    //   this.previousStory()
-    // })
-
-    // this.hammer.on('swipeleft', (event) => {
-    //   console.log('SWIPE: swipeleft')
-
-    //   this.nextStory()
-    // })
+    this.setGestureAction()
 
     if (this.index === 0) {
       this.activate()
@@ -202,6 +136,44 @@ export default {
     previousStory() {
       // EventBus.$emit("PREVIOUS_STORY");
       this.$store.dispatch('stories/previousStory')
+    },
+    setGestureAction() {
+      this.hammer = new Hammer.Manager(this.$el, {
+        recognizers: [
+          [Hammer.Swipe, { direction: Hammer.DIRECTION_ALL }],
+          [Hammer.Tap],
+          [Hammer.Press, { time: 1, threshold: 1000000 }],
+        ],
+      })
+
+      this.hammer.on('press', () => {
+        this.timeline.pause()
+        // console.log('press: press')
+      })
+
+      this.hammer.on('pressup tap', () => {
+        this.timeline.play()
+        // console.log('press: pressup tap')
+      })
+
+      // Tap on the side to navigate between slides
+      this.hammer.on('tap', (event) => {
+        if (event.center.x > window.outerWidth / 3) {
+          this.nextSlide()
+        } else {
+          this.previousSlide()
+        }
+      })
+
+      this.hammer.on('swipeup', (event) => {
+        this.$router.push(
+          `/articles/${encrypt(this.slides[this.currentSlideIndex].guid)}`
+        )
+      })
+
+      this.hammer.on('swipedown', (event) => {
+        this.$router.push('/')
+      })
     },
   },
 }

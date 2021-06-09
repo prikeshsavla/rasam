@@ -17,7 +17,7 @@
 
 <script>
 import debounce from 'lodash/debounce'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -97,11 +97,11 @@ export default {
   },
   methods: {
     nextStory() {
-      console.log('NEXT_STORY')
+      // console.log('NEXT_STORY')
       this.$store.dispatch('stories/nextStory')
     },
     previousStory() {
-      console.log('PREVIOUS_STORY')
+      // console.log('PREVIOUS_STORY')
       this.$store.dispatch('stories/previousStory')
     },
   },

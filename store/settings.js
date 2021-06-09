@@ -2,6 +2,7 @@ import db from '~/plugins/db'
 
 export const state = () => ({
   settings: [],
+  loading: false,
 })
 
 export const getters = {}
@@ -43,5 +44,8 @@ export const mutations = {
   },
   setSettings(state, settings) {
     state.settings = settings
+  },
+  setLoading(state, loading) {
+    state.loading = loading
   },
 }

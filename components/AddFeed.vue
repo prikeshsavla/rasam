@@ -1,14 +1,9 @@
 <template>
-  <v-text-field
-    v-model="feedURL"
-    :loading="isLoading"
-    label="Add Blog/ RSS Feed"
-  >
-    <v-btn slot="append" color="primary" :loading="isLoading" @click="addFeed">
+  <v-text-field v-model="feedURL" :loading="loading" label="Add Blog/ RSS Feed">
+    <v-btn slot="append" color="primary" :loading="loading" @click="addFeed">
       <v-icon color="white"> mdi-plus </v-icon>
     </v-btn>
   </v-text-field>
-  <!-- https://www.smashingmagazine.com/feed/ -->
 </template>
 
 <script>
@@ -16,13 +11,13 @@ export default {
   data() {
     return {
       feedURL: '',
-      isLoading: false,
+      loading: false,
       buttonText: '+',
     }
   },
   methods: {
     async addFeed() {
-      this.isLoading = true
+      this.loading = true
       const result = await this.$store.dispatch('feeds/addFeed', {
         url: this.feedURL,
       })
@@ -32,7 +27,7 @@ export default {
       } else {
         alert(`Cannot find feed for ${this.feedURL}`)
       }
-      this.isLoading = false
+      this.loading = false
     },
   },
 }

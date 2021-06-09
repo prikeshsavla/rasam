@@ -41,57 +41,22 @@ export const getters = {
 
 export const actions = {
   async fetchAll({ state, commit }, { feedId, onlyLiked }) {
-    let items = []
-    let totalItems = 0
-
     if (feedId) {
       await commit('setFeedId', feedId)
     }
     if (onlyLiked) {
       await commit('setOnlyLiked', onlyLiked)
     }
-    if (state.feedId) {
-      items = await db.items
-        .where('feedLink')
-        .equals(decrypt(state.feedId))
-        .reverse()
-        .sortBy('isoDate')
 
-      totalItems = await db.items
-        .where('feedLink')
-        .equals(decrypt(state.feedId))
-        .count()
-    } else if (state.onlyLiked) {
-      items = await db.likes.toArray()
-      await Promise.all(
-        items.map(async (item) => {
-          const likedItem = await db.items.get({ guid: item.guid })
-          Object.assign(item, likedItem)
-          return item
-        })
-      )
+    const list = await getList(state)
+    await Promise.all(list.map(resolveLike))
 
-      totalItems = items.length
-    } else {
-      items = await db.items.orderBy('isoDate').reverse().toArray()
-
-      totalItems = await db.items.count()
-    }
-
-    await Promise.all(
-      items.map(async (item) => {
-        const likesItem = await db.likes.get({ guid: item.guid })
-        item.likedAt = likesItem ? likesItem.likedAt : null
-        return item
-      })
-    )
-
-    commit('setItems', items)
-    commit('setTotalItems', totalItems)
+    commit('setList', list)
+    commit('setTotalItems', list.length)
     return state.list
   },
 
-  async getItemByID({ commit, state }, id) {
+  async getItemByID({ commit }, id) {
     const item = await db.items.get({ guid: decrypt(id) })
 
     const likesItem = await db.likes.get({ guid: item.guid })
@@ -123,7 +88,7 @@ export const actions = {
 }
 
 export const mutations = {
-  setItems(state, list) {
+  setList(state, list) {
     state.list = list || []
   },
   setItem(state, item) {
@@ -156,4 +121,32 @@ export const mutations = {
   setTotalItems(state, totalItems) {
     state.totalItems = totalItems
   },
+}
+
+async function resolveLike(item) {
+  const likedItem = await db.items.get({ guid: item.guid })
+  Object.assign(item, likedItem)
+  return item
+}
+
+async function getList(state) {
+  if (state.feedId) {
+    return await db.items
+      .where('feedLink')
+      .equals(decrypt(state.feedId))
+      .reverse()
+      .sortBy('isoDate')
+  } else if (state.onlyLiked) {
+    const list = await db.likes.toArray()
+    await Promise.all(
+      list.map(async (item) => {
+        const likedItem = await db.items.get({ guid: item.guid })
+        Object.assign(item, likedItem)
+        return item
+      })
+    )
+    return list
+  } else {
+    return await db.items.orderBy('isoDate').reverse().toArray()
+  }
 }

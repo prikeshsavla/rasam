@@ -2,6 +2,14 @@
   <v-container>
     <v-app-bar app dense elevate-on-scroll color="primary">
       <v-app-bar-title class="white--text"> Rasam </v-app-bar-title>
+      <v-spacer></v-spacer>
+      <v-progress-circular
+        v-if="loading"
+        :size="20"
+        :width="2"
+        indeterminate
+        color="white"
+      ></v-progress-circular>
     </v-app-bar>
     <div class="block mb-4">
       <!-- <search-input></search-input> -->
@@ -15,15 +23,15 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
+  data() {
+    return {
+      sheet: false,
+    }
+  },
   async fetch() {
     const onboarded = await this.$store.dispatch('settings/get', 'onboarded')
     if (!onboarded) {
       this.$router.push('/onboarding')
-    }
-  },
-  data() {
-    return {
-      sheet: false,
     }
   },
 
@@ -33,6 +41,7 @@ export default {
     }),
     ...mapState({
       stories: ({ stories }) => stories.list,
+      loading: ({ settings }) => settings.loading,
     }),
   },
   async mounted() {

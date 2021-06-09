@@ -15,18 +15,7 @@ export const getters = {}
 
 export const actions = {
   async fetchAll({ commit }) {
-    const groupedFeeds = await getGroupedItems()
-
-    const stories = groupedFeeds.map((story) => {
-      return Object.assign(story, {
-        action: '',
-        photo:
-          story.image && story.image.url
-            ? story.image.url
-            : `https://ui-avatars.com/api/?background=E37C43&color=fff&name=${story.title}`,
-        id: encrypt(story.link),
-      })
-    })
+    const stories = await getGroupedItems()
 
     await commit('setStories', { stories })
     return stories
@@ -73,10 +62,7 @@ export const mutations = {
 }
 
 async function getGroupedItems(afterDate = new Date() - STORY_INTERVAL) {
-  // Query
   const feeds = await db.feeds.toArray()
-
-  // using parallel queries:
   await Promise.all(
     feeds.map(async (feed) => {
       feed.items = await db.items
@@ -90,6 +76,10 @@ async function getGroupedItems(afterDate = new Date() - STORY_INTERVAL) {
     })
   )
 
+  return buildStories(feeds)
+}
+
+function buildStories(feeds) {
   return feeds
     .filter((feed) => feed.items.length > 0)
     .sort((nextFeed, previousFeed) => {
@@ -97,5 +87,15 @@ async function getGroupedItems(afterDate = new Date() - STORY_INTERVAL) {
         new Date(previousFeed.items[0].isoDate) -
         new Date(nextFeed.items[0].isoDate)
       )
+    })
+    .map((story) => {
+      return Object.assign(story, {
+        action: '',
+        photo:
+          story.image && story.image.url
+            ? story.image.url
+            : `https://ui-avatars.com/api/?background=E37C43&color=fff&name=${story.title}`,
+        id: encrypt(story.link),
+      })
     })
 }

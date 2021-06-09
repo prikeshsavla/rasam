@@ -1,7 +1,7 @@
 {
   "name": "rasam",
   "description": "A PWA which reads rss feeds with privacy and offline access in mind.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "author": {
     "email": "dev.prikesh@gmail.com",
@@ -28,7 +28,8 @@
     "lodash-es": "^4.17.21",
     "nuxt": "^2.15.3",
     "rss-parser": "^3.12.0",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "vue-html-secure": "^1.0.9"
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",

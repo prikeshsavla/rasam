@@ -62,28 +62,21 @@ export const actions = {
       const parser = new Parser()
       const requestFeedUrl = url.replace(/\/$/, '')
 
-      const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl, '')
+      const { error, discoveredUrl } = await findFeedFromURL(requestFeedUrl)
       if (error) {
         console.error(error)
         return false
       }
 
       const feed = await parser.parseURL(CORS_PROXY + discoveredUrl)
-      const items = feed.items.map((item) =>
-        Object.assign(item, {
-          feedTitle: feed.title,
-          feedLink: feed.link,
-          guid: item.guid || item.id || item.link,
-        })
-      )
+      const { items } = parseFeeds([feed])
 
       const feedWithoutItems = Object.assign({}, feed, {
         items: [],
         feedUrl: discoveredUrl,
       })
-      // debugger
-      await db.feeds.put(feedWithoutItems)
 
+      await db.feeds.put(feedWithoutItems)
       await db.items.bulkPut(items)
 
       await dispatch('saveFeedsAndItems')
@@ -105,24 +98,19 @@ export const actions = {
   async fetchFeedsOnly({ commit }) {
     await commit('setFeeds', { feeds: await db.feeds.toArray() })
   },
-  async fetchAll({ dispatch, state }) {
+  async fetchAll({ dispatch, commit, state }) {
+    await commit('settings/setLoading', true, { root: true })
     await dispatch('saveFeedsAndItems')
 
     try {
-      const parser = new Parser()
-      const feedPromises = state.list.map(({ feedUrl }) => {
-        return parser.parseURL(CORS_PROXY + feedUrl)
-      })
-      const resolvedFeeds = await Promise.all(feedPromises)
-      const { items } = parseFeeds(resolvedFeeds)
-
-      await db.items.bulkPut(items)
+      await loadFeedItems(state)
       dispatch('saveFeedsAndItems')
-
-      return state.list
     } catch (message) {
       console.error(message)
+    } finally {
+      await commit('settings/setLoading', false, { root: true })
     }
+    return state.list
   },
   async saveFeedsAndItems({ dispatch }) {
     await dispatch('fetchFeedsOnly')
@@ -146,45 +134,68 @@ export const mutations = {
   },
 }
 
+async function loadFeedItems(state) {
+  const parser = new Parser()
+  const feedPromises = state.list.map(({ feedUrl }) => {
+    return parser.parseURL(CORS_PROXY + feedUrl)
+  })
+  const resolvedFeeds = await Promise.all(feedPromises)
+  const { items } = parseFeeds(resolvedFeeds)
+  await db.items.bulkPut(items)
+}
+
 function isValidHttpUrl(string) {
   let url
 
   try {
     url = new URL(string)
+    return url.protocol === 'http:' || url.protocol === 'https:'
   } catch (_) {
     return false
   }
-
-  return url.protocol === 'http:' || url.protocol === 'https:'
 }
 
 function parseFeeds(feeds) {
   const _items = []
   const _feeds = []
   feeds.forEach((feed) => {
-    const feedWithoutItems = Object.assign({}, feed, { items: [] })
-    _feeds.push(feedWithoutItems)
+    _feeds.push(Object.assign({}, feed, { items: [] }))
     _items.push(
       ...feed.items.map((item) =>
-        Object.assign(item, { feedTitle: feed.title, feedLink: feed.link })
+        Object.assign(item, {
+          feedTitle: feed.title,
+          feedLink: feed.link,
+          guid: item.guid || item.id || item.link,
+        })
       )
     )
   })
   return { feeds: _feeds, items: _items }
 }
 
-async function findFeedFromURL(url, searchPrefix) {
+async function findFeedFromURL(url) {
   if (!isValidHttpUrl(url)) {
     return {
       error:
         'Invalid URL:' + url + '. Please enter a valid URL with http or https.',
     }
   }
+  const feed = url.replace(/\/$/, '')
 
-  const p = new URL(url)
-  // const protocol = p.protocol != null ? p.protocol : 'http:'
-  // const domain = protocol + '//' + p.hostname
-  const videoPrefix = 'https://www.youtube.com/feeds/videos.xml?channel_id='
+  const res = await checkAll(feed)
+  if (res) return { error: null, discoveredUrl: res }
+
+  return { error: 'No feed found for url: ' + url }
+}
+
+async function isRss(u) {
+  const response = await fetch(CORS_PROXY + u).catch((e) => {
+    return false
+  })
+  return response.ok && response.headers.get('content-type').includes('xml')
+}
+
+async function checkSuspects(f) {
   const usualSuspects = [
     '/feed.xml',
     '/rss.xml',
@@ -193,62 +204,33 @@ async function findFeedFromURL(url, searchPrefix) {
     '/atom.xml',
     '.rss',
   ]
-
-  const feed = url.replace(/\/$/, '')
-  let res = ''
-
-  if (!p.protocol)
-    return { error: null, discovered: searchPrefix + url.split(' ') }
-
-  if (
-    p.host.endsWith('youtube.com') &&
-    p.path.startsWith('/channel') &&
-    p.path.split('/').length === 3
-  )
-    return { error: null, discovered: videoPrefix + p.path.split('/')[2] }
-
-  async function isRss(u) {
-    const response = await fetch(CORS_PROXY + u).catch((e) => {
-      return false
-    })
-    return response.ok && response.headers.get('content-type').includes('xml')
+  for (const suspect of usualSuspects) {
+    if (await isRss(f + suspect)) return f + suspect
   }
+  return ''
+}
 
-  async function checkSuspects(f) {
-    for (const suspect of usualSuspects) {
-      if (await isRss(f + suspect)) return f + suspect
-    }
-    return ''
-  }
+async function checkTheDom(url) {
+  const response = await fetch(CORS_PROXY + url).catch((e) => {
+    return false
+  })
 
-  async function checkTheDom(url) {
-    const response = await fetch(CORS_PROXY + url).catch((e) => {
-      return false
-    })
-
-    if (response.ok) {
-      const feeds = getFeeds(await response.text(), { url })
-      if (feeds.length > 0) {
-        return feeds[0].href
-      }
-      return ''
-    } else {
-      return ''
+  if (response.ok) {
+    const feeds = getFeeds(await response.text(), { url })
+    if (feeds.length > 0) {
+      return feeds[0].href
     }
   }
+  return ''
+}
 
-  async function checkAll() {
-    if (await isRss(feed)) {
-      return feed
-    }
-    const urlInDOM = await checkTheDom(feed)
-    if (urlInDOM) {
-      return urlInDOM
-    }
-    return await checkSuspects(feed)
+async function checkAll(feed) {
+  if (await isRss(feed)) {
+    return feed
   }
-
-  res = await checkAll()
-  if (res) return { error: null, discoveredUrl: res }
-  else return { error: 'No feed found for url: ' + url }
+  const urlInDOM = await checkTheDom(feed)
+  if (urlInDOM) {
+    return urlInDOM
+  }
+  return await checkSuspects(feed)
 }

@@ -7,7 +7,7 @@
       <search-input @search="search" />
     </keep-alive>
     <v-fade-transition>
-      <div class="mt-2" v-if="searchResults.length > 0">
+      <div v-if="searchResults.length > 0" class="mt-2">
         <small>{{ searchResults.length }} Results found.</small>
 
         <article-list
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     search(input) {
-      console.log('search:' + input)
+      // console.log('search:' + input)
       this.$store.commit('stackItems/setQuery', { query: input })
     },
   },

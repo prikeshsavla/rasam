@@ -83,7 +83,7 @@
           </v-list-item-group>
         </v-list>
         <v-divider></v-divider>
-        <v-card-actions class="d-flex flex-column">
+        <v-card-actions class="d-flex flex-row justify-center">
           <v-btn
             :disabled="step === 3 || selected.length === 0"
             color="primary"
@@ -134,8 +134,8 @@ export default {
 
   methods: {
     async saveSuggested() {
-      this.step++
       if (this.selected.length > 0) {
+        this.step++
         const addFeedResponse = await this.addFromSuggested(this.selected)
         const feedNames = addFeedResponse.map((response) => response.feedTitle)
         const totalItems = addFeedResponse

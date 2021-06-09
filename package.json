@@ -1,7 +1,7 @@
 {
   "name": "rasam",
   "description": "A PWA which reads rss feeds with privacy and offline access in mind.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "author": {
     "email": "dev.prikesh@gmail.com",

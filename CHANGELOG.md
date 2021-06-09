@@ -1,3 +1,7 @@
+## [1.0.5] - Refactor Code
+
+- Refactor Js
+- Refactor Vue
 ## [1.0.4] - Fix Feeds loading issue
 
 - Fix Feeds loading issue

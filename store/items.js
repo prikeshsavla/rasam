@@ -1,5 +1,5 @@
-import db from '@/plugins/db'
-import { decrypt } from '@/plugins/crypt'
+import db from '@/services/db'
+import { decrypt } from '~/services/crypt'
 import Fuse from 'fuse.js'
 
 export const state = () => ({
@@ -50,6 +50,7 @@ export const actions = {
 
     const list = await getList(state)
     await Promise.all(list.map(resolveLike))
+    await Promise.all(list.map(resolveFeed))
 
     commit('setList', list)
     commit('setTotalItems', list.length)
@@ -57,10 +58,10 @@ export const actions = {
   },
 
   async getItemByID({ commit }, id) {
-    const item = await db.items.get({ guid: decrypt(id) })
+    let item = await db.items.get({ guid: decrypt(id) })
 
-    const likesItem = await db.likes.get({ guid: item.guid })
-    item.likedAt = likesItem ? likesItem.likedAt : null
+    item = await resolveLike(item)
+    item = await resolveFeed(item)
 
     await commit('setItem', item)
     return item
@@ -84,6 +85,9 @@ export const actions = {
     if (state.page + 1 <= maxPages) {
       await commit('incrementPageBy', 1)
     }
+  },
+  async deleteByFeed(_, feedId) {
+    await db.items.where('feedLink').equals(decrypt(feedId)).delete()
   },
 }
 
@@ -109,7 +113,7 @@ export const mutations = {
   incrementPageBy(state, incrementBy) {
     state.page = state.page + incrementBy
   },
-  setQuery(state, { query }) {
+  setQuery(state, query) {
     state.query = query || ''
   },
   setFeedId(state, feedId) {
@@ -124,8 +128,14 @@ export const mutations = {
 }
 
 async function resolveLike(item) {
-  const likedItem = await db.items.get({ guid: item.guid })
+  const likedItem = await db.likes.get({ guid: item.guid })
   Object.assign(item, likedItem)
+  return item
+}
+
+async function resolveFeed(item) {
+  const feed = await db.feeds.get({ link: item.feedLink })
+  Object.assign(item, { feedTitle: feed.title })
   return item
 }
 

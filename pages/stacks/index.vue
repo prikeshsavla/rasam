@@ -31,6 +31,7 @@
         @click="sheet = !sheet"
       >
         <v-icon>mdi-plus</v-icon>
+        <span class="sr-only">Add Blog</span>
       </v-btn>
     </v-fab-transition>
     <v-bottom-sheet v-model="sheet" inset>
@@ -66,13 +67,16 @@ export default {
   },
 
   async mounted() {
-    await this.$store.dispatch('feeds/fetchFeedsOnly')
+    const feeds = await this.$store.dispatch('feeds/fetchFeedsOnly')
     await this.$store.dispatch('stackItems/fetchAll', {})
+    if (!feeds.length) {
+      this.$router.push('/onboarding')
+    }
   },
   methods: {
     search(input) {
       // console.log('search:' + input)
-      this.$store.commit('stackItems/setQuery', { query: input })
+      this.$store.commit('stackItems/setQuery', input)
     },
   },
 }

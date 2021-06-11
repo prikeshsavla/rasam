@@ -3,15 +3,18 @@
     <v-app-bar app dense flat class="primary" fixed>
       <v-app-bar-nav-icon class="white--text" @click="back">
         <v-icon>mdi-arrow-left</v-icon>
+        <span class="sr-only">Back</span>
       </v-app-bar-nav-icon>
       <v-spacer></v-spacer>
 
       <like-button color="white" :guid="article.guid" :liked-at="likedAt" />
       <v-btn icon class="white--text" @click="shareArticle">
         <v-icon>mdi-share-variant</v-icon>
+        <span class="sr-only">Share</span>
       </v-btn>
       <v-btn v-if="article.link" :href="article.link" icon>
         <v-icon color="white">mdi-open-in-new</v-icon>
+        <span class="sr-only">Open in Browser</span>
       </v-btn>
     </v-app-bar>
     <v-sheet class="transparent pb-5 pt-10 px-5 d-flex justify-end flex-column">
@@ -49,13 +52,16 @@
         color="grey"
       >
         <v-icon>mdi-book</v-icon>
+        <span class="sr-only">Open Stack</span>
       </v-btn>
       <like-button :guid="article.guid" :liked-at="likedAt" />
       <v-btn icon @click="shareArticle">
         <v-icon>mdi-share-variant</v-icon>
+        <span class="sr-only">Share</span>
       </v-btn>
       <v-btn v-if="article.link" :href="article.link" icon>
         <v-icon>mdi-open-in-new</v-icon>
+        <span class="sr-only">Open in Browser</span>
       </v-btn>
     </v-bottom-navigation>
   </div>
@@ -64,9 +70,9 @@
 <script>
 import { mapState } from 'vuex'
 import Vue from 'vue'
-import share from '@/plugins/share'
+import share from '@/services/share'
 import VueSecureHTML from 'vue-html-secure'
-import { encrypt } from '~/plugins/crypt'
+import { encrypt } from '~/services/crypt'
 import LikeButton from '~/components/LikeButton.vue'
 
 Vue.use(VueSecureHTML)
@@ -74,13 +80,13 @@ Vue.use(VueSecureHTML)
 export default {
   components: { LikeButton },
   layout: 'full',
-  async asyncData({ store, params: { id } }) {
-    await store.dispatch('items/getItemByID', id)
-  },
   data() {
     return {
       bottom: 1,
     }
+  },
+  async fetch({ store, params: { id } }) {
+    await store.dispatch('items/getItemByID', id)
   },
   computed: {
     likedAt() {

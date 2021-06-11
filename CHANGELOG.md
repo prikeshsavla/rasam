@@ -1,7 +1,12 @@
+## [1.1.0] - Add Edit / Delete Feed
+
+- Add Edit / Delete Feed
+
 ## [1.0.5] - Refactor Code
 
 - Refactor Js
 - Refactor Vue
+  
 ## [1.0.4] - Fix Feeds loading issue
 
 - Fix Feeds loading issue

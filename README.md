@@ -21,7 +21,7 @@ $ yarn generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-### Roadmap
+### Roadmap V1
 
 - [x] Display Feed like Twitter cards
 - [x] Field to add new Feed
@@ -30,3 +30,13 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Dispay Feed like stories
 - [x] Added Inifinte Scroll Paginations
 - [x] Added Search with [Fuze.js](https://github.com/krisk/Fuse)
+
+
+### Roadmap V2
+
+- [x] Add Better Accessibility Support
+- [x] Add Edit and Remove Feed Support
+- [ ] Export Data
+- [ ] Sync 2 Apps To and From
+- [ ] Add Netlify Deploy tag and Link
+- [ ] Add Multilingual Support

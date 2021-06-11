@@ -21,12 +21,35 @@ $ yarn generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-### Roadmap
+
+| Home       | Article       |
+| -------------- | -------------- |
+| ![Home](static/intro/home.png) | ![Article](static/intro/article.png) |
+
+| Stacks       | Favorites       |
+| -------------- | -------------- |
+| ![Stacks](static/intro/stacks.png) | ![Favorites](static/intro/favorites.png) |
+
+
+
+
+
+### Roadmap V1
 
 - [x] Display Feed like Twitter cards
 - [x] Field to add new Feed
 - [x] Open Article on tap
 - [x] Favorite a article
 - [x] Dispay Feed like stories
-- [x] Added Inifinte Scroll Paginations
+- [x] Added Infinite Scroll Paginations
 - [x] Added Search with [Fuze.js](https://github.com/krisk/Fuse)
+
+
+### Roadmap V2
+
+- [x] Add Better Accessibility Support
+- [x] Add Edit and Remove Feed Support
+- [ ] Export Data
+- [ ] Sync 2 Apps To and From
+- [ ] Add Netlify Deploy tag and Link
+- [ ] Add Multilingual Support

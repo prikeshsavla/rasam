@@ -1,6 +1,7 @@
-## [1.1.0] - Add Edit / Delete Feed
+## [1.2.0] - Add Edit / Delete Feed
 
 - Add Edit / Delete Feed
+- Add Accessibility Support
 
 ## [1.0.5] - Refactor Code
 

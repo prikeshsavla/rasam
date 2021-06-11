@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="stories.length">
-      <v-card flat tile>
+      <v-card flat tile color="accent">
         <v-window v-model="currentStoryIndex" :touch="onTouch">
           <v-window-item
             v-for="(story, index) in stories"

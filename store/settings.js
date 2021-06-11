@@ -1,4 +1,4 @@
-import db from '~/plugins/db'
+import db from '~/services/db'
 
 export const state = () => ({
   settings: [],

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { encrypt } from '@/plugins/crypt'
+import { encrypt } from '@/services/crypt'
 import TimeAgo from './TimeAgo.vue'
 export default {
   components: { TimeAgo },

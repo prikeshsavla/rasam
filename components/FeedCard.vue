@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { encrypt } from '@/plugins/crypt'
+import { encrypt } from '@/services/crypt'
 export default {
   props: {
     feed: {

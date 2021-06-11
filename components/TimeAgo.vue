@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import format from '@/plugins/registerTimeago'
+import format from '@/services/registerTimeago'
 
 export default {
   props: {

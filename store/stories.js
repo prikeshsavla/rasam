@@ -1,5 +1,5 @@
-import db from '@/plugins/db'
-import { decrypt, encrypt } from '~/plugins/crypt'
+import db from '@/services/db'
+import { decrypt, encrypt } from '~/services/crypt'
 const SECOND = 1000
 const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE

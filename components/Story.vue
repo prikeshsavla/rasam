@@ -1,5 +1,5 @@
 <template>
-  <div class="story secondary">
+  <div class="story">
     <div class="timeline">
       <div v-for="(slide, i) in slides" :key="i" class="slice">
         <div class="progress">&nbsp;</div>
@@ -18,7 +18,7 @@
 <script>
 import anime from 'animejs/lib/anime.es.js'
 import Hammer from 'hammerjs'
-import { encrypt } from '~/plugins/crypt'
+import { encrypt } from '~/services/crypt'
 
 const SLIDE_DURATION = 6000
 

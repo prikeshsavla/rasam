@@ -1,7 +1,13 @@
 <template>
   <v-btn icon @click="like">
-    <v-icon v-if="!!likedAt" :color="color"> mdi-heart </v-icon>
-    <v-icon v-else :color="color"> mdi-heart-outline </v-icon>
+    <template v-if="!!likedAt">
+      <v-icon :color="color"> mdi-heart </v-icon>
+      <span class="sr-only">Unlike</span>
+    </template>
+    <template v-else>
+      <v-icon :color="color"> mdi-heart-outline </v-icon>
+      <span class="sr-only">Like</span>
+    </template>
   </v-btn>
 </template>
 

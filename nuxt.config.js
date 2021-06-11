@@ -118,9 +118,9 @@ export default {
     theme: {
       themes: {
         light: {
-          primary: 'E37C43', // #E53935
-          secondary: 'F3F4F6', // #FFCDD2
-          accent: 'F0EFE8', // #FFCDD2
+          primary: 'E37C43', // #E37C43
+          secondary: 'F3F4F6', // #F3F4F6
+          accent: 'F0EFE8', // #F0EFE8
         },
       },
     },

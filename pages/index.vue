@@ -1,14 +1,14 @@
 <template>
   <v-container>
-    <v-app-bar app dense elevate-on-scroll color="primary">
-      <v-app-bar-title class="white--text"> Rasam </v-app-bar-title>
+    <v-app-bar app dense elevate-on-scroll color="accent">
+      <v-app-bar-title class="black--text"> Rasam </v-app-bar-title>
       <v-spacer></v-spacer>
       <v-progress-circular
         v-if="loading"
         :size="20"
         :width="2"
         indeterminate
-        color="white"
+        color="primary"
       ></v-progress-circular>
     </v-app-bar>
     <div class="block mb-4">
@@ -29,8 +29,8 @@ export default {
     }
   },
   async fetch() {
-    const onboarded = await this.$store.dispatch('settings/get', 'onboarded')
-    if (!onboarded) {
+    const feeds = await this.$store.dispatch('feeds/fetchFeedsOnly')
+    if (!feeds.length) {
       this.$router.push('/onboarding')
     }
   },

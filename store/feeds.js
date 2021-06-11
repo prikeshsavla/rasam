@@ -1,7 +1,7 @@
-import db from '@/plugins/db'
+import db from '@/services/db'
 import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
-import { decrypt } from '~/plugins/crypt'
+import { decrypt } from '~/services/crypt'
 const CORS_PROXY =
   window.location.hostname === 'localhost'
     ? 'https://api.allorigins.win/raw?url='
@@ -95,8 +95,9 @@ export const actions = {
     )
     return addFeedResponse
   },
-  async fetchFeedsOnly({ commit }) {
+  async fetchFeedsOnly({ commit, state }) {
     await commit('setFeeds', { feeds: await db.feeds.toArray() })
+    return state.list
   },
   async fetchAll({ dispatch, commit, state }) {
     await commit('settings/setLoading', true, { root: true })
@@ -112,6 +113,14 @@ export const actions = {
     }
     return state.list
   },
+
+  async deleteFeed({ dispatch, commit }, id) {
+    await dispatch('items/deleteByFeed', id, { root: true })
+    await db.feeds.delete(decrypt(id))
+    await commit('setFeed', null)
+    await dispatch('saveFeedsAndItems')
+  },
+
   async saveFeedsAndItems({ dispatch }) {
     await dispatch('fetchFeedsOnly')
     await dispatch('items/fetchAll', {}, { root: true })
@@ -119,6 +128,14 @@ export const actions = {
   },
   async getFeed({ commit }, id) {
     commit('setFeed', await db.feeds.get({ link: decrypt(id) }))
+  },
+  async saveTitle({ dispatch }, { title, id }) {
+    await db.feeds.update(decrypt(id), { title })
+    await dispatch('getFeed', id)
+  },
+  async saveDescription({ dispatch }, { description, id }) {
+    await db.feeds.update(decrypt(id), { description })
+    await dispatch('getFeed', id)
   },
 }
 

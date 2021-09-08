@@ -1,3 +1,12 @@
+/* 
+
+const share = { 
+  title: "", 
+  text: "", 
+  url: ""
+}
+*/
+
 function share(shareObject) {
   if (!('share' in navigator)) {
     alert('Web Share API not supported.')

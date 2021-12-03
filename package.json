@@ -17,6 +17,7 @@
     "lint": "yarn lint:js"
   },
   "dependencies": {
+    "10": "^0.0.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "^3.3.5",
     "animejs": "^3.2.1",
@@ -25,9 +26,11 @@
     "fuse.js": "^6.4.6",
     "get-feeds": "^1.1.0",
     "hammerjs": "^2.0.8",
+    "jsonpack": "^1.1.5",
     "lodash-es": "^4.17.21",
     "nuxt": "^2.15.3",
     "rss-parser": "^3.12.0",
+    "sass-loader": "10",
     "timeago.js": "^4.0.2",
     "vue-html-secure": "^1.0.9"
   },

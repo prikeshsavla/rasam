@@ -29,6 +29,13 @@ export const actions = {
       return false
     }
   },
+  async exportData() {
+    const feeds = await db.feeds.toArray()
+    const items = await db.items.toArray()
+    const likes = await db.likes.toArray()
+
+    return { feeds, items, likes }
+  },
 }
 
 export const mutations = {

@@ -15,17 +15,12 @@ export const state = () => ({
     {
       contentSnippet: `A journey to find new and inspiring open-source libraries with a touch of India's food, people and culture.`,
       title: 'Open Pull Request',
-      link: 'https://openpullrequest.substack.com/',
+      link: 'https://openpullrequest.substack.com/rss',
     },
     {
       contentSnippet: `Best known for the Hot 100 and Billboard 200, which list the most popular songs and albums each week in the industry. Offers industry news, events, podcasts, and music streaming.`,
       title: 'Billboard',
       link: 'https://www.billboard.com/',
-    },
-    {
-      contentSnippet: `High-end business journalism keeping readers up-to-date on economic news as well as interviews with top entrepreneurs. There’s also educated predictions, trend analyses, and tips on how to improve businesses.`,
-      title: 'Business Insider',
-      link: 'https://www.businessinsider.com/',
     },
     {
       contentSnippet:
@@ -47,9 +42,9 @@ export const state = () => ({
     },
     {
       contentSnippet:
-        'With an editorial focus on innovation in technology, world changing ideas, leadership, creativity, and design, FastCompany gives readers both economic news and advice on how to better grow their business.',
-      title: 'Fast Company',
-      link: 'https://www.fastcompany.com/',
+        "We're all about bending the rules and defying the norm, and to make science and technology a whole lot more fun!",
+      title: 'Nibbles of Noteworthy Nonsense',
+      link: 'https://bytes.absurd.industries/rss/',
     },
   ],
 })

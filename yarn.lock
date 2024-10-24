@@ -6627,7 +6627,7 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-html-parser@^6.1.13:
+node-html-parser@^6.1.13, node-html-parser@^6.1.5:
   version "6.1.13"
   resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-6.1.13.tgz#a1df799b83df5c6743fcd92740ba14682083b7e4"
   integrity sha512-qIsTMOY4C/dAa5Q5vsobRpOOvPfC4pB61UVW2uSwZNUp0QU/jCekTal1vMmbO0DgdHeLUJpv/ARmDqErVxA3Sg==
@@ -8455,6 +8455,13 @@ rss-parser@^3.12.0:
   dependencies:
     entities "^2.0.3"
     xml2js "^0.5.0"
+
+rss-url-finder@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/rss-url-finder/-/rss-url-finder-0.0.6.tgz#03bbf7c5b25bfb37fa5247dc1eaf10887beb44d8"
+  integrity sha512-IMSbytN8avu0XPh+tYnopuVdxWZ/B4Fg70cLLmNCuoXmNDIf1dH2wmz4+5fwO3wFRhbAGgchLoEfFV2jfZeYdg==
+  dependencies:
+    node-html-parser "^6.1.5"
 
 run-async@^2.4.0:
   version "2.4.1"

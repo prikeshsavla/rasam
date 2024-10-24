@@ -1,11 +1,8 @@
-import db from '@/services/db'
 import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
+import db from '@/services/db'
 import { decrypt } from '~/services/crypt'
-const CORS_PROXY =
-  window.location.hostname === 'localhost'
-    ? 'https://api.allorigins.win/raw?url='
-    : 'https://api.allorigins.win/raw?url='
+const CORS_PROXY = 'https://api.allorigins.win/raw?url='
 
 export const state = () => ({
   list: [],
@@ -204,7 +201,15 @@ async function isRss(u) {
   const response = await fetch(CORS_PROXY + u).catch((e) => {
     return false
   })
-  return response.ok && response.headers.get('content-type').includes('xml')
+  if (response.ok) {
+    const content = await response.text()
+    return (
+      response.headers.get('content-type').includes('xml') ||
+      content.startsWith('<?xml')
+    )
+  } else {
+    return false
+  }
 }
 
 async function checkSuspects(f) {
@@ -214,6 +219,7 @@ async function checkSuspects(f) {
     '/feed',
     '/rss',
     '/atom.xml',
+    '/feed',
     '.rss',
   ]
   for (const suspect of usualSuspects) {

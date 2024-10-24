@@ -21,21 +21,15 @@ $ yarn generate
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/prikeshsavla/rasam)
 
-
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-
-| Home       | Article       |
-| -------------- | -------------- |
+| Home                           | Article                              |
+| ------------------------------ | ------------------------------------ |
 | ![Home](static/intro/home.png) | ![Article](static/intro/article.png) |
 
-| Stacks       | Favorites       |
-| -------------- | -------------- |
+| Stacks                             | Favorites                                |
+| ---------------------------------- | ---------------------------------------- |
 | ![Stacks](static/intro/stacks.png) | ![Favorites](static/intro/favorites.png) |
-
-
-
-
 
 ### Roadmap V1
 
@@ -47,12 +41,15 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Added Infinite Scroll Paginations
 - [x] Added Search with [Fuze.js](https://github.com/krisk/Fuse)
 
-
 ### Roadmap V2
 
 - [x] Add Better Accessibility Support
 - [x] Add Edit and Remove Feed Support
-- [ ] Export Data
-- [ ] Sync 2 Apps To and From
+- [x] Upgrade RSS reading logic
 - [ ] Add Netlify Deploy tag and Link
 - [ ] Add Multilingual Support
+- [ ] Save data in local OPFS with sqlite or duckdb
+- [ ] Add Ollama support to summarize articles
+- [ ] Add local AI option instead of Ollama
+- [ ] Sync 2 Apps To and From
+- [ ] Export Data

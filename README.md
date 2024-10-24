@@ -46,10 +46,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Add Better Accessibility Support
 - [x] Add Edit and Remove Feed Support
 - [x] Upgrade RSS reading logic
-- [ ] Add Netlify Deploy tag and Link
-- [ ] Add Multilingual Support
-- [ ] Save data in local OPFS with sqlite or duckdb
+- [x] Add Netlify Deploy tag and Link
 - [ ] Add Ollama support to summarize articles
 - [ ] Add local AI option instead of Ollama
 - [ ] Sync 2 Apps To and From
 - [ ] Export Data
+- [ ] Add Multilingual Support
+- [ ] Save data in local OPFS with sqlite or duckdb

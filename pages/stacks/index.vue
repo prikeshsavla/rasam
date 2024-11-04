@@ -3,7 +3,9 @@
     <v-list-item>
       <template>
         <v-list-item-content>
-          <v-list-item-title><h1 class="mt-3">Stacks</h1></v-list-item-title>
+          <v-list-item-title>
+            <h1 class="mt-3">Stacks</h1>
+          </v-list-item-title>
           <v-list-item-subtitle>
             Substacks that are in your feed.
           </v-list-item-subtitle>
@@ -18,25 +20,13 @@
       <div v-if="searchResults.length > 0" class="mt-2">
         <small>{{ searchResults.length }} Results found.</small>
 
-        <article-list
-          class="mt-3 mb-5"
-          :items="searchResults"
-          :show-loader="false"
-        />
+        <article-list class="mt-3 mb-5" :items="searchResults" :show-loader="false" />
       </div>
 
       <feed-list v-else :feeds="feeds" class="mt-6 mb-5" />
     </v-fade-transition>
-    <v-speed-dial
-      v-model="fab"
-      :top="top"
-      :bottom="bottom"
-      :right="right"
-      :left="left"
-      :direction="direction"
-      :open-on-hover="hover"
-      :transition="transition"
-    >
+    <v-speed-dial v-model="fab" :top="top" :bottom="bottom" :right="right" :left="left" :direction="direction"
+      :open-on-hover="hover" :transition="transition">
       <template v-slot:activator>
         <v-btn v-model="fab" color="primary" dark fab>
           <v-icon v-if="fab"> mdi-close </v-icon>
@@ -49,6 +39,11 @@
       <v-btn fab dark small color="black" @click="saveDBFile">
         <v-icon> mdi-download-box </v-icon>
       </v-btn>
+      <template v-if="userNotLoggedIn()">
+        <v-btn fab dark small color="black" @click="login">
+          <v-icon> mdi-account-circle </v-icon>
+        </v-btn>
+      </template>
     </v-speed-dial>
     <v-bottom-sheet v-model="sheet" inset>
       <v-sheet class="text-right">
@@ -67,6 +62,8 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import { pack } from 'jsonpack'
+import db from '../../services/db'
+
 export default {
   data() {
     return {
@@ -80,6 +77,7 @@ export default {
       right: true,
       bottom: true,
       left: false,
+      user: null,
       transition: 'slide-y-reverse-transition',
     }
   },
@@ -89,7 +87,7 @@ export default {
     }),
     ...mapGetters({
       searchResults: 'stackItems/searchResults',
-    }),
+    })
   },
   async mounted() {
     const feeds = await this.$store.dispatch('feeds/fetchFeedsOnly')
@@ -101,6 +99,14 @@ export default {
   methods: {
     search(input) {
       this.$store.commit('stackItems/setQuery', input)
+    },
+    async login() {
+      try {
+        await db.cloud.login();
+      } catch (error) {
+        console.log(error)
+      }
+
     },
     async saveDBFile() {
       const filename = 'export.rasam'
@@ -124,6 +130,12 @@ export default {
       link.dispatchEvent(evt)
       link.remove()
     },
+    userNotLoggedIn() {
+      const user = db.cloud.currentUserId;
+      console.log(user);
+      // return false;
+      return user == 'unauthorized'
+    }
   },
 }
 </script>
@@ -132,6 +144,7 @@ export default {
 .v-speed-dial {
   position: absolute;
 }
+
 .v-btn--floating {
   position: relative;
 }

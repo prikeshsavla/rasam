@@ -91,3 +91,5 @@ sw.*
 
 
 /dexie-cloud/
+# Local Netlify folder
+.netlify

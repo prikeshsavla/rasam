@@ -29,6 +29,7 @@
     "hammerjs": "^2.0.8",
     "jsonpack": "^1.1.5",
     "lodash-es": "^4.17.21",
+    "node-fetch": "^3.3.2",
     "nuxt": "^2.15.3",
     "rss-parser": "^3.12.0",
     "timeago.js": "^4.0.2",

@@ -2,7 +2,7 @@ import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
 import db from '@/services/db'
 import { decrypt } from '~/services/crypt'
-const CORS_PROXY = 'https://thingproxy.freeboard.io/fetch/' //'https://api.allorigins.win/raw?url=' 
+const CORS_PROXY = 'https://rasam.prikeshsavla.com/.netlify/functions/rss-feed?url=' //'https://api.allorigins.win/raw?url=' 
 
 export const state = () => ({
   list: [],

@@ -27,3 +27,4 @@
   for = "/cors-proxy/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
+

@@ -12,7 +12,6 @@ db.version(4).stores({
 db.cloud.configure({
   databaseUrl: "https://zafs6jdr1.dexie.cloud",
   requireAuth: false, // optional
-  nameSuffix: false
 });
 
 export default db

@@ -39,11 +39,11 @@
       <v-btn fab dark small color="black" @click="saveDBFile">
         <v-icon> mdi-download-box </v-icon>
       </v-btn>
-      <template v-if="userNotLoggedIn()">
-        <v-btn fab dark small color="black" @click="login">
-          <v-icon> mdi-account-circle </v-icon>
-        </v-btn>
-      </template>
+      <!-- <template v-if="userNotLoggedIn()"> -->
+      <v-btn fab dark small color="black" @click="login">
+        <v-icon> mdi-account-circle </v-icon>
+      </v-btn>
+      <!-- </template> -->
     </v-speed-dial>
     <v-bottom-sheet v-model="sheet" inset>
       <v-sheet class="text-right">

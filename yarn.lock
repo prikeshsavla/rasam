@@ -3843,10 +3843,25 @@ devalue@^2.0.1:
   resolved "https://registry.yarnpkg.com/devalue/-/devalue-2.0.1.tgz#5d368f9adc0928e47b77eea53ca60d2f346f9762"
   integrity sha512-I2TiqT5iWBEyB8GRfTDP0hiLZ0YeDJZ+upDxjBfOC2lebO5LezQMv7QvIUTzdb64jQyAKLf1AHADtGN+jw6v8Q==
 
-dexie@^3.0.3:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.7.tgz#1346541c9c81e3bc6055a042a928837890595e3a"
-  integrity sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==
+dexie-cloud-addon@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/dexie-cloud-addon/-/dexie-cloud-addon-4.0.8.tgz#bd2f4d858a6faa7a2c0aeb9629e0e9f06d6c8c42"
+  integrity sha512-wD+eObGcqiL+PjQ6t3bLsXLnuJhPUw+WpMh1fvbMUPRSq7ODZjjXOz1zSzIw/fK6VDgrGbYS7B0BFWBfQNz5UQ==
+  dependencies:
+    dexie-cloud-common "^1.0.31"
+    rxjs "^7.x"
+
+dexie-cloud-common@^1.0.31:
+  version "1.0.42"
+  resolved "https://registry.yarnpkg.com/dexie-cloud-common/-/dexie-cloud-common-1.0.42.tgz#e26b1a38709b0776f36044192fe08b0c611852e1"
+  integrity sha512-vBrx8+Nm2+iMagduITkMr0YmX8HBxQ51B6BgViMLnPstBJmyisL5gN1OZKtzUUsxw1bPyeh4njhWtunfVCyS1Q==
+  dependencies:
+    lib0 "^0.2.97"
+
+dexie@^4.0.9:
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.0.9.tgz#8c4e827815a84ef4fdc6aa7923f89ea2cda87610"
+  integrity sha512-VQG1huEVSAdDZssb9Bb9mFy+d3jAE0PT4d1nIRYlT46ip1fzbs1tXi0SlUayRDgV3tTbJG8ZRqAo2um49gtynA==
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
@@ -5851,6 +5866,11 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
+isomorphic.js@^0.2.4:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/isomorphic.js/-/isomorphic.js-0.2.5.tgz#13eecf36f2dba53e85d355e11bf9d4208c6f7f88"
+  integrity sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -6080,6 +6100,13 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+lib0@^0.2.97:
+  version "0.2.98"
+  resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.98.tgz#fe55203b8586512c1837248d5f309d7dfd566f5d"
+  integrity sha512-XteTiNO0qEXqqweWx+b21p/fBnNHUA1NwAtJNJek1oPrewEZs2uiT4gWivHKr9GqCjDPAhchz0UQO8NwU3bBNA==
+  dependencies:
+    isomorphic.js "^0.2.4"
 
 lilconfig@^2.0.3:
   version "2.1.0"
@@ -6627,7 +6654,7 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-html-parser@^6.1.13, node-html-parser@^6.1.5:
+node-html-parser@^6.1.13:
   version "6.1.13"
   resolved "https://registry.yarnpkg.com/node-html-parser/-/node-html-parser-6.1.13.tgz#a1df799b83df5c6743fcd92740ba14682083b7e4"
   integrity sha512-qIsTMOY4C/dAa5Q5vsobRpOOvPfC4pB61UVW2uSwZNUp0QU/jCekTal1vMmbO0DgdHeLUJpv/ARmDqErVxA3Sg==
@@ -8456,13 +8483,6 @@ rss-parser@^3.12.0:
     entities "^2.0.3"
     xml2js "^0.5.0"
 
-rss-url-finder@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/rss-url-finder/-/rss-url-finder-0.0.6.tgz#03bbf7c5b25bfb37fa5247dc1eaf10887beb44d8"
-  integrity sha512-IMSbytN8avu0XPh+tYnopuVdxWZ/B4Fg70cLLmNCuoXmNDIf1dH2wmz4+5fwO3wFRhbAGgchLoEfFV2jfZeYdg==
-  dependencies:
-    node-html-parser "^6.1.5"
-
 run-async@^2.4.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.4.1.tgz#8440eccf99ea3e70bd409d49aab88e10c189a455"
@@ -8488,6 +8508,13 @@ rxjs@^6.6.0:
   integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
   dependencies:
     tslib "^1.9.0"
+
+rxjs@^7.x:
+  version "7.8.1"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.8.1.tgz#6f6f3d99ea8044291efd92e7c7fcf562c4057543"
+  integrity sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==
+  dependencies:
+    tslib "^2.1.0"
 
 safe-array-concat@^1.1.2:
   version "1.1.2"
@@ -9438,6 +9465,11 @@ tslib@^2.0.0, tslib@^2.0.3, tslib@^2.3.1:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.7.0.tgz#d9b40c5c40ab59e8738f297df3087bf1a2690c01"
   integrity sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==
+
+tslib@^2.1.0:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
+  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
 tsutils@^3.21.0:
   version "3.21.0"

@@ -37,6 +37,7 @@ html {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .v-application .content a {
   color: black !important;
 }
@@ -50,5 +51,11 @@ html {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+.dxc-login-dlg button {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid black;
 }
 </style>

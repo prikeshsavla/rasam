@@ -2,7 +2,7 @@ import Parser from 'rss-parser'
 import getFeeds from 'get-feeds'
 import db from '@/services/db'
 import { decrypt } from '~/services/crypt'
-const CORS_PROXY = 'https://api.allorigins.win/raw?url='
+const CORS_PROXY = 'https://thingproxy.freeboard.io/fetch/' //'https://api.allorigins.win/raw?url=' 
 
 export const state = () => ({
   list: [],
@@ -12,7 +12,7 @@ export const state = () => ({
     {
       contentSnippet: `A journey to find new and inspiring open-source libraries with a touch of India's food, people and culture.`,
       title: 'Open Pull Request',
-      link: 'https://openpullrequest.substack.com/rss',
+      link: 'https://openpullrequest.substack.com/',
     },
     {
       contentSnippet: `Best known for the Hot 100 and Billboard 200, which list the most popular songs and albums each week in the industry. Offers industry news, events, podcasts, and music streaming.`,
@@ -41,7 +41,7 @@ export const state = () => ({
       contentSnippet:
         "We're all about bending the rules and defying the norm, and to make science and technology a whole lot more fun!",
       title: 'Nibbles of Noteworthy Nonsense',
-      link: 'https://bytes.absurd.industries/rss/',
+      link: 'https://bytes.absurd.industries/rss',
     },
   ],
 })
@@ -205,7 +205,8 @@ async function isRss(u) {
     const content = await response.text()
     return (
       response.headers.get('content-type').includes('xml') ||
-      content.startsWith('<?xml')
+      content.startsWith('<?xml') ||
+      content.startsWith('<rss')
     )
   } else {
     return false

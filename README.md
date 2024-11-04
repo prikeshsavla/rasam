@@ -47,8 +47,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [x] Add Edit and Remove Feed Support
 - [x] Upgrade RSS reading logic
 - [x] Add Netlify Deploy tag and Link
-- [ ] Add Ollama support to summarize articles
 - [ ] Add local AI option instead of Ollama
+- [ ] Add Ollama support to summarize articles
 - [ ] Sync 2 Apps To and From
 - [ ] Export Data
 - [ ] Add Multilingual Support
